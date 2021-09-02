@@ -1,0 +1,42 @@
+@import "./Theme.scss";
+
+.Chat {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: inherit;
+  background-color: $bg;
+  color: white;
+
+  .Messages {
+    display: flex;
+    background-color: $second_nav;
+    flex: 1;
+  }
+
+  .InputBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 5px;
+
+    .send {
+      :hover {
+        cursor: pointer;
+      }
+    }
+
+    .InputArea {
+      display: flex;
+      height: 80%;
+      width: 180px;
+      // max-width: 80%;
+      background-color: transparent;
+      border: none;
+      color: white;
+      font-family: "Roboto";
+      resize: none;
+    }
+  }
+}

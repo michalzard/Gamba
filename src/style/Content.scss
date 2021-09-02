@@ -1,0 +1,34 @@
+@import "./Theme.scss";
+
+.navigation {
+  background-color: $bg;
+
+  .MuiButtonBase-root {
+    color: #666666;
+    height: 55px;
+    padding: 0px;
+
+    :hover {
+      color: $pinkred;
+    }
+  }
+
+  .intBtnContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 55px;
+  width: inherit;
+}
+
+.content {
+  width: 100%;
+  background-color: $bg_content;
+  color: white;
+}
