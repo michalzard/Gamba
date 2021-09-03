@@ -17,3 +17,7 @@ function Chat() {
 }
 
 export default Chat;
+
+/**
+ * Please login to chat overlay
+ */
