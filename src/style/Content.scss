@@ -5,7 +5,7 @@
 
   .MuiButtonBase-root {
     color: #666666;
-    height: 55px;
+    height: 52px;
     padding: 0px;
 
     :hover {
@@ -20,6 +20,20 @@
     padding: 10px;
   }
 
+  .login {
+    margin-right: 5px;
+  }
+
+  .loginBtn {
+    color: white;
+    padding: 10px;
+    height: 40px;
+
+    :hover {
+      color: white;
+    }
+  }
+
   display:flex;
   justify-content: space-between;
   align-items: center;
@@ -31,4 +45,51 @@
   width: 100%;
   background-color: $bg_content;
   color: white;
+}
+
+//removed border radius so that there are no pixels that arent being colored in dialog menu
+.MuiPaper-rounded {
+  border-radius: 0px !important;
+}
+
+.loginDialog {
+  background-color: $second_nav;
+  color: white;
+  width: 400px;
+  button{margin: 5px;}
+  .or{
+    padding: 5px;
+    color:gray;
+  }
+
+  .dialogTitle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    button {
+      background-color: $pinkred;
+    }
+  }
+
+  .dialogContent {
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
+    justify-content: center;
+    h2,h3{margin-left: 5px;}
+    .MuiFilledInput-root {
+      margin: 5px;
+
+      input {
+        color: white;
+      }
+    }
+  }
+  .actions{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    a{text-decoration: none;color:$pinkred}
+  }
 }
