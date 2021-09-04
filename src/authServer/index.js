@@ -76,5 +76,25 @@ res.send({message:"User validation failed"});
 
 })
 
+/*request send everytime user visits websites
+if their last session is still active,go to website,
+if not send response back to delete last session and make them log in*/
+
+app.get('/session',async(req,res)=>{
+    const {lastSession}=req.query;
+
+    const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:lastSession});
+    console.log(foundSession);
+    if(foundSession){
+        res.send({message:"Session found"});
+    }else{
+        /**
+         * if session not active
+         */
+        res.send({message:"Session wasn't found,relog"});
+    }
+
+})
+
 
 app.listen(3001,()=>{console.log('Auth Server ~3001')});
