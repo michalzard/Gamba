@@ -1,14 +1,13 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import "../style/Content.scss";
 import {Button,Dialog,DialogTitle,DialogContent,TextField} from "@material-ui/core";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
 import axios from "axios";
 
 
-function Navigation() {
+function Navigation({sessionID,setSessionID}) {
     //tabs
     const [selected,setSelected]=useState(1);
     //login popup states
@@ -16,6 +15,8 @@ function Navigation() {
     const closeLoginDialog=()=>{
         setLoginOpened(false);
     }
+ 
+
     return (
        <div className="content">
 
@@ -31,14 +32,14 @@ function Navigation() {
 
         <div className="login">
         {/**TODO: show whole menu of actions once already logged in  */}
-        {localStorage.getItem("sessionID") ? <ExitToAppIcon/> : 
+        {sessionID ? <ExitToAppIcon/> : 
         <Button color="secondary" className="loginBtn" variant="contained" onClick={()=>{setLoginOpened(true);}} ><PersonIcon/> Login / Register</Button>
         }
         </div>
         </div>
        
         <div>
-        <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened}/>
+        <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened}/>
         
         <span>Content</span>
         
@@ -61,22 +62,24 @@ function InteractiveButton({ButtonIcon,selectedIndex,currentSelection,setSelecte
 }
 
 
-function LoginDialog({handleClose,openBool}){
+function LoginDialog({handleClose,openBool,setSessionID,setLoginOpened}){
 const [display,setDisplay]=useState("Login");
 const [warning,setWarning]=useState("");
 
 /**
  * add visible response for user if they try to register with name that was already created
  */
-const registerUser=()=>{
+const registerUser=({setSessionID})=>{
     //send data to auth server
     axios.post(`http://localhost:3001/register`,{
         email:document.getElementsByClassName("em")[0].children[1].children[0].value,
         name:document.getElementsByClassName("nm")[0].children[1].children[0].value,
         password:document.getElementsByClassName("pw")[0].children[1].children[0].value,
     }).then(data=>{
-    const {message,sessionID}=data.data;
+    const {sessionID}=data.data;
     localStorage.setItem('session',sessionID);
+    setSessionID(sessionID);
+    setLoginOpened(false);
     });
    
 }
@@ -91,7 +94,9 @@ const loginUser=()=>{
     }).then(data=>{
     const {message,sessionID}=data.data;
     setWarning(message);
-    localStorage.setItem('sessionID',sessionID); 
+    localStorage.setItem('sessionID',sessionID);
+    setSessionID(sessionID);
+    setLoginOpened(false);
     });
 }
 
