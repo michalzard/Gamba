@@ -13,7 +13,9 @@ mongoose.connect(process.env.DATABASE_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(()=>console.log("database connected"))
-.catch(err=>console.log(err))
+.catch(err=>console.log(err));
+
+
 
 const mongoStore=new mongoDBStore({
     uri:process.env.DATABASE_URI,
@@ -40,8 +42,8 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/register',async (req,res)=>{
-const {email,name,password}=req.body;
 try{
+const {email,name,password}=req.body;
 const hashedPw=await bcrypt.hash(password,12);
 const registeredUser=new User({email,name,password:hashedPw});
 await registeredUser.save();
@@ -56,9 +58,8 @@ res.send({message:"User registration failed"});
 });
 
 app.post('/login',async(req,res)=>{
-const {name,password}=req.body;
-console.log(req.body);
 try{
+const {name,password}=req.body;
 const foundUser=await User.findOne({name});
 if(foundUser){
     const validatedPw=await bcrypt.compare(password,foundUser.password);
@@ -77,6 +78,18 @@ res.send({message:"User validation failed"});
 
 })
 
+app.post('/logout',async (req,res)=>{
+try{
+    const{id}=req.body;
+    const removedSession=await mongoose.connection.db.collection("sessions").findOneAndDelete({_id:id});
+    if(removedSession){res.send({message:"User successfully logged out!"});}
+    else{res.send({message:"Session invalid!"});}
+}catch(err){
+    console.log(err);
+}
+
+});
+
 /*request send everytime user visits websites
 if their last session is still active,go to website,
 if not send response back to delete last session and make them log in*/
@@ -87,15 +100,37 @@ app.get('/session',async(req,res)=>{
     const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:lastSession});
 
     if(foundSession){
-        const{_id}=foundSession;
-        res.send({message:"Session found",sessionID:_id});
+    const{_id}=foundSession;
+    res.send({message:"Session found",sessionID:_id});
     }else{
-        res.send({message:"Session wasn't found"});
+    res.send({message:"Session wasn't found"});
     }
     }catch(err){
-        console.log(err);
+    console.log(err);
     }
 })
+
+
+app.post('/member',async (req,res)=>{
+try{
+    const {id}=req.body;
+    const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:id});
+    const {user_id}=foundSession.session;
+
+if(mongoose.isValidObjectId(user_id)){
+    const requestID=mongoose.Types.ObjectId(user_id);
+    const foundUser=await User.findById(requestID,{_id:0,password:0});
+
+    res.send({message:"Member found!",user:foundUser});
+}else{
+    res.send({message:"Member not found or session invalid"});
+}
+}catch(err){
+console.log(err);
+}
+});
+
+
 
 
 app.listen(3001,()=>{console.log('Auth Server ~3001')});
