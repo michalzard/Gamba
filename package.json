@@ -18,6 +18,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "socket.io": "^4.2.0",
+    "socket.io-client": "^4.2.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -25,7 +27,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "authServer-dev": "nodemon ./src/authServer/index.js"
+    "authServer-dev": "nodemon ./src/authServer/index.js",
+    "chatServer-dev": "nodemon ./src/chatServer/index.js"
   },
   "eslintConfig": {
     "extends": [
