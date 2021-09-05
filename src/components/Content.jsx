@@ -7,15 +7,21 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from "axios";
 
 
-function Navigation({sessionID,setSessionID,user}) {
+function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened}) {
     //tabs
     const [selected,setSelected]=useState(1);
-    //login popup states
-    const [loginOpened,setLoginOpened]=useState(false);
     const closeLoginDialog=()=>{
         setLoginOpened(false);
     }
- 
+    
+    const logoutUser=()=>{
+        //when already logged in so there's session already established
+        axios.post(`http://localhost:3001/logout`,{
+            id:localStorage.getItem("sessionID"),
+        });
+        setSessionID(null);
+        setUser(null);
+    }
 
     return (
        <div className="content">
@@ -38,10 +44,10 @@ function Navigation({sessionID,setSessionID,user}) {
         </div>
        
         <div>
-        <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened}/>
+        <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened} setUser={setUser}/>
         <div className="second_navigation">
         
-        <ExitToAppIcon/>
+        {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
         <span>Content</span>
         
@@ -64,14 +70,14 @@ function InteractiveButton({ButtonIcon,selectedIndex,currentSelection,setSelecte
 }
 
 
-function LoginDialog({handleClose,openBool,setSessionID,setLoginOpened}){
+function LoginDialog({handleClose,openBool,setSessionID,setLoginOpened,setUser}){
 const [display,setDisplay]=useState("Login");
 const [warning,setWarning]=useState("");
 
 /**
  * add visible response for user if they try to register with name that was already created
  */
-const registerUser=({setSessionID})=>{
+const registerUser=()=>{
     //send data to auth server
     axios.post(`http://localhost:3001/register`,{
         email:document.getElementsByClassName("em")[0].children[1].children[0].value,
@@ -82,6 +88,11 @@ const registerUser=({setSessionID})=>{
     localStorage.setItem('session',sessionID);
     setSessionID(sessionID);
     setLoginOpened(false);
+    //get user data
+    axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
+        const {user}=data.data;
+        setUser(user);
+    });
     });
    
 }
@@ -99,6 +110,11 @@ const loginUser=()=>{
     localStorage.setItem('sessionID',sessionID);
     setSessionID(sessionID);
     setLoginOpened(false);
+    //get user data
+    axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
+        const {user}=data.data;
+        setUser(user);
+    });
     });
 }
 

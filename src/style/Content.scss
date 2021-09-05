@@ -12,12 +12,13 @@
       color: $pinkred;
     }
   }
+
   .intBtnContent {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
-  
+
   }
 
   .login {
@@ -111,11 +112,20 @@
 
 .second_navigation {
   background-color: $second_nav;
+  height: 30px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   padding: 5px;
   color: lightgray;
+}
+
+.exitIcon {
+  cursor: pointer;
+
+  :hover {
+    color: $pinkred;
+  }
 }
 
 .userInfo {
@@ -144,8 +154,9 @@
     background-color: $bg_content;
     border: 1px solid gray;
     border-radius: 0px 5px 5px 0px;
+
     .total {
-      overflow-x:hidden;
+      overflow-x: hidden;
       text-overflow: ellipsis;
       color: $pinkred;
       font-size: medium;
