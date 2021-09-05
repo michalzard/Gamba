@@ -12,12 +12,12 @@
       color: $pinkred;
     }
   }
-
   .intBtnContent {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 10px;
+  
   }
 
   .login {
@@ -53,13 +53,17 @@
 }
 
 .loginDialog {
-  background-color: $second_nav;
+  background-color: $bg_content2;
   color: white;
   width: 400px;
-  button{margin: 5px;}
-  .or{
+
+  button {
+    margin: 5px;
+  }
+
+  .or {
     padding: 5px;
-    color:gray;
+    color: gray;
   }
 
   .dialogTitle {
@@ -67,6 +71,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+
     button {
       background-color: $pinkred;
     }
@@ -77,7 +82,12 @@
     flex-direction: column;
     max-height: 400px;
     justify-content: center;
-    h2,h3{margin-left: 5px;}
+
+    h2,
+    h3 {
+      margin-left: 5px;
+    }
+
     .MuiFilledInput-root {
       margin: 5px;
 
@@ -86,10 +96,65 @@
       }
     }
   }
-  .actions{
-    display:flex;
+
+  .actions {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    a{text-decoration: none;color:$pinkred}
+
+    a {
+      text-decoration: none;
+      color: $pinkred
+    }
+  }
+}
+
+.second_navigation {
+  background-color: $second_nav;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 5px;
+  color: lightgray;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .balanceTag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 35px;
+    background-color: $pinkred;
+    color: white;
+    font-size: medium;
+    border-radius: 5px 0px 0px 5px;
+  }
+
+  .balance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 35px;
+    background-color: $bg_content;
+    border: 1px solid gray;
+    border-radius: 0px 5px 5px 0px;
+    .total {
+      overflow-x:hidden;
+      text-overflow: ellipsis;
+      color: $pinkred;
+      font-size: medium;
+    }
+  }
+
+  .userPhoto {
+    border: 2px solid red;
+    cursor: pointer;
+    margin: 0px 40px 0px 40px;
   }
 }

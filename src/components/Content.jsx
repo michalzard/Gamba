@@ -1,13 +1,13 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import "../style/Content.scss";
-import {Button,Dialog,DialogTitle,DialogContent,TextField} from "@material-ui/core";
+import {Button,Dialog,DialogTitle,DialogContent,TextField,Avatar} from "@material-ui/core";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from "axios";
 
 
-function Navigation({sessionID,setSessionID}) {
+function Navigation({sessionID,setSessionID,user}) {
     //tabs
     const [selected,setSelected]=useState(1);
     //login popup states
@@ -26,13 +26,12 @@ function Navigation({sessionID,setSessionID}) {
         <InteractiveButton ButtonIcon={HighlightOffIcon} text='Roulette' currentSelection={selected} setSelected={setSelected} selectedIndex={1}/>
         <InteractiveButton text='Text 2' currentSelection={selected} setSelected={setSelected} selectedIndex={2}/>
         <InteractiveButton text='Text 3' currentSelection={selected} setSelected={setSelected} selectedIndex={3}/>
-
         
         </div>
 
         <div className="login">
         {/**TODO: show whole menu of actions once already logged in  */}
-        {sessionID ? <ExitToAppIcon/> : 
+        {sessionID ? <UserInfo userBalance={user ? user.balance : null}/> : 
         <Button color="secondary" className="loginBtn" variant="contained" onClick={()=>{setLoginOpened(true);}} ><PersonIcon/> Login / Register</Button>
         }
         </div>
@@ -40,7 +39,10 @@ function Navigation({sessionID,setSessionID}) {
        
         <div>
         <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened}/>
+        <div className="second_navigation">
         
+        <ExitToAppIcon/>
+        </div>
         <span>Content</span>
         
         </div>
@@ -54,7 +56,7 @@ export default Navigation
 
 function InteractiveButton({ButtonIcon,selectedIndex,currentSelection,setSelected,text}){
     return(
-        <Button color="primary" variant="text" disableFocusRipple style={{
+        <Button color="primary" className="intBtn" ariant="text" disableFocusRipple style={{
         color:currentSelection===selectedIndex ? "#c32d4f" : null,borderTop: currentSelection===selectedIndex ? '2px solid red' : null}} onClick={()=>{setSelected(selectedIndex);}}>
         <div className="intBtnContent">{ButtonIcon ? <ButtonIcon style={{marginRight:'5px'}}/> : null} <span className="intBtnText">{text}</span></div>
         </Button> 
@@ -122,9 +124,9 @@ return(
     <div className="actions">
     <Button color="secondary" variant="text" disableRipple size="small" onClick={()=>{display==="Login" ? setDisplay("Register") : setDisplay("Login");}}>
     {display==="Login" ? "Forgot your password?" : "Already have an account?" }</Button>
-    <Button color="secondary" variant="contained" onClick={()=>{
+    <Button color="secondary" variant="contained" onClick={()=>
     {display==="Login" ? loginUser() : registerUser(); } 
-    }}>{display==="Login" ? "Login" : "Register"}</Button>
+    }>{display==="Login" ? "Login" : "Register"}</Button>
     </div>
     </DialogContent>
 
@@ -134,8 +136,14 @@ return(
 )
 }
 
-/**
- * 
- * On login/register button press open dialog window that asks person to login or register
- * <Dialog onClose , open bool,
- */
+function UserInfo({userBalance}){
+    return(
+        <div className="userInfo">
+        <div className="balanceTag">Credits</div>
+        <div className="balance">
+        <span className="total">{userBalance ? userBalance : 0}</span>
+        </div>
+        <Avatar className="userPhoto"/>
+        </div>
+    )
+}

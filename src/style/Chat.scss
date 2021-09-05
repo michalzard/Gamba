@@ -10,7 +10,7 @@
 
   .Messages {
     display: flex;
-    background-color: $second_nav;
+    background-color: $bg_content2;
     flex: 1;
   }
 
@@ -24,6 +24,7 @@
     .send {
       :hover {
         cursor: pointer;
+        color:$pinkred;
       }
     }
 
@@ -35,8 +36,8 @@
       background-color: transparent;
       border: none;
       color: white;
-      font-family: "Roboto";
       resize: none;
+      font-family: "Roboto";
     }
   }
 }
