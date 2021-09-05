@@ -8,25 +8,32 @@ import axios from "axios";
 function App() {
 
     const [sessionID,setSessionID]=useState(null);
-     /**
-     * JUST TO TEST
-     */
-      useEffect(() => {
+    const [user,setUser]=useState(null);
+    
+    //login popup states
+    const [loginOpened,setLoginOpened]=useState(false);
+    useEffect(() => {
         if(localStorage.getItem("sessionID")){
         setSessionID(localStorage.getItem("sessionID"))
         axios.get(`http://localhost:3001/session?lastSession=${localStorage.getItem("sessionID")}`).then(data=>{
-        const {message}=data.data;
-        console.log(data);
+        const {message,sessionID}=data.data;
         if(message.includes("Session wasn't found")){setSessionID(null);localStorage.removeItem("sessionID");}
+    
+          axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
+        const {user}=data.data;
+        setUser(user);
         });
+
+      });
       }
     }, []);
 
   return (
     <div className="App">
     <CssBaseline/>
-    <Chat sessionID={sessionID}/>
-    <Content sessionID={sessionID} setSessionID={setSessionID}/>
+    <Chat user={user} setLoginOpened={setLoginOpened} />
+    <Content setLoginOpened={setLoginOpened} loginOpened={loginOpened}
+    sessionID={sessionID} setSessionID={setSessionID} setUser={setUser} user={user}/>
     </div>
   );
 }
