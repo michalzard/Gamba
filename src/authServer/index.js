@@ -25,7 +25,7 @@ app.use(session({
     secret:process.env.SESSION_SECRET,
     resave:false,
     cookie:{
-        maxAge:1000*60*60*8,//8 hours
+        maxAge:1000*60 * 28800,//8 hours
         httpOnly:true,
         secure:true,
     },
@@ -46,7 +46,7 @@ const hashedPw=await bcrypt.hash(password,12);
 const registeredUser=new User({email,name,password:hashedPw});
 await registeredUser.save();
 if(registeredUser){
-req.session.user=registeredUser;
+req.session.user_id=registeredUser._id;
 res.send({message:"User registered successfully",sessionID:req.session.id});
 }
 }catch(err){
@@ -57,13 +57,14 @@ res.send({message:"User registration failed"});
 
 app.post('/login',async(req,res)=>{
 const {name,password}=req.body;
+console.log(req.body);
 try{
 const foundUser=await User.findOne({name});
 if(foundUser){
     const validatedPw=await bcrypt.compare(password,foundUser.password);
-    console.log(validatedPw);
+  
     if(validatedPw){
-        req.session.user=foundUser;
+        req.session.user_id=foundUser._id;
         res.send({message:"Login successful",sessionID:req.session.id});
     }else{
         res.send({message:"Username or password you entered is incorrect"});
@@ -82,18 +83,18 @@ if not send response back to delete last session and make them log in*/
 
 app.get('/session',async(req,res)=>{
     const {lastSession}=req.query;
-
+    try{
     const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:lastSession});
-    console.log(foundSession);
-    if(foundSession){
-        res.send({message:"Session found"});
-    }else{
-        /**
-         * if session not active
-         */
-        res.send({message:"Session wasn't found,relog"});
-    }
 
+    if(foundSession){
+        const{_id}=foundSession;
+        res.send({message:"Session found",sessionID:_id});
+    }else{
+        res.send({message:"Session wasn't found"});
+    }
+    }catch(err){
+        console.log(err);
+    }
 })
 
 
