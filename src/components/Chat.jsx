@@ -1,16 +1,63 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "../style/Chat.scss";
 import SendIcon from '@material-ui/icons/Send';
+import {io} from "socket.io-client";
+import { Avatar } from '@material-ui/core';
 
-function Chat({sessionID,user}) {
+function Chat({user,setLoginOpened}) {
+    const [socket,setSocket]=useState(null);
+    const [messages,setMessages]=useState([]);
+
+    useEffect(()=>{
+    if(user!==null){
+    const socket=io('http://localhost:3002');
+    setSocket(socket);
+    socket.on("message",(data)=>{
+    //show messages that were emitted to chat server in chatbox
+    setMessages((prev)=>[...prev,data]);
+    });
+    return ()=>socket.close();    
+}
+    
+    },[user]);
+
+    const sendMessageToChat=()=>{
+        if(socket && user){
+        const author={photoURL:user.photoURL,name:user.name};
+        const textBox=document.getElementsByClassName('InputArea')[0]
+        const data={author,message:textBox.value};
+        if(textBox.value.length>0){ 
+        socket.emit('message',data);
+        setMessages((prev)=>[...prev,data]);
+        console.log(messages);
+        textBox.value='';    
+        }
+
+        }
+    }
+
     return (
         <div className="Chat">
         <div className="Info"><h4>Info about some shit</h4></div>
         <div className="Messages">
+        {
+           user ?  messages.map((el,i)=>{
+                return <ChatMessage key={i} author={el.author} message={el.message} />
+            })
+            : null
+        }
         </div>
         <div className="InputBox">
-        <textarea type="text" className="InputArea" placeholder={`Chat as ${user ? user.name : null}`}/>
-        <div className="send"><SendIcon className="chatSend"></SendIcon></div>
+        {
+            user ? 
+            <>
+            <textarea type="text" className="InputArea" placeholder={`Chat as ${user.name }`}/> 
+            <div className="send"><SendIcon onClick={()=>{sendMessageToChat()}} className="chatSend"></SendIcon></div>
+            </> 
+            : 
+            <span className="notLoggedInput">Please<span onClick={()=>{setLoginOpened(true)}} className="loginLink">log in</span> to chat</span> 
+        }
+        
         </div>
         </div>
     )
@@ -18,6 +65,15 @@ function Chat({sessionID,user}) {
 
 export default Chat;
 
-/**
- * Please login to chat overlay
- */
+function ChatMessage({author,message}){
+    return(
+        <div className="msg">
+        <Avatar className="msgAvatar" src={author.photoURL ? author.photoURL : null} />
+        <span className="msgContent">
+        <span className="msgAuthor">{author ? author.name : "Username"}</span>
+        <span className="msgText">{message ? message : null}</span>
+        </span>
+        
+        </div>
+    )
+}

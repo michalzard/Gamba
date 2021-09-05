@@ -9,9 +9,33 @@
   color: white;
 
   .Messages {
-    display: flex;
     background-color: $bg_content2;
+    display: flex;
     flex: 1;
+    flex-direction: column;
+    padding:5px;
+    .msg{
+      padding:5px;
+      display:flex;
+      align-items: center;
+      .msgAvatar{
+        width: 30px;
+        height: 30px;
+      }
+      .msgContent{
+      display:flex;
+      flex-direction: column;
+      padding-left:5px;
+      .msgAuthor{
+        font-size: smaller;
+        font-weight: bold;
+      }
+      .msgText{
+        font-size: small;
+        color:lightgray;
+      }
+      }
+    }
   }
 
   .InputBox {
@@ -39,5 +63,18 @@
       resize: none;
       font-family: "Roboto";
     }
+    .notLoggedInput{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      .loginLink{
+        cursor: pointer;
+        color:$pinkred;
+        margin:5px;
+      }
+    }
   }
+  
 }
