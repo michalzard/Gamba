@@ -8,7 +8,6 @@ import axios from "axios";
 function App() {
 
     const [sessionID,setSessionID]=useState(null);
-
      /**
      * JUST TO TEST
      */
@@ -17,6 +16,7 @@ function App() {
         setSessionID(localStorage.getItem("sessionID"))
         axios.get(`http://localhost:3001/session?lastSession=${localStorage.getItem("sessionID")}`).then(data=>{
         const {message}=data.data;
+        console.log(data);
         if(message.includes("Session wasn't found")){setSessionID(null);localStorage.removeItem("sessionID");}
         });
       }
@@ -25,8 +25,8 @@ function App() {
   return (
     <div className="App">
     <CssBaseline/>
-    <Chat/>
-    <Content sessionID={sessionID} setSessionID={setSessionID} />
+    <Chat sessionID={sessionID}/>
+    <Content sessionID={sessionID} setSessionID={setSessionID}/>
     </div>
   );
 }
