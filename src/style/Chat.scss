@@ -14,6 +14,17 @@
     flex: 1;
     flex-direction: column;
     padding:5px;
+    .chatDisconnected{
+      display:flex;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      svg{
+        width:20px;
+        height: 20px;
+      }
+      span{color:gray;}
+    }
     .msg{
       padding:5px;
       display:flex;

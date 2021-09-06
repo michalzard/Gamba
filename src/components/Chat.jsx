@@ -3,6 +3,8 @@ import "../style/Chat.scss";
 import SendIcon from '@material-ui/icons/Send';
 import {io} from "socket.io-client";
 import { Avatar } from '@material-ui/core';
+import BlockIcon from '@material-ui/icons/Block';
+
 
 function Chat({user,setLoginOpened}) {
     const [socket,setSocket]=useState(null);
@@ -40,6 +42,9 @@ function Chat({user,setLoginOpened}) {
         <div className="Chat">
         <div className="Info"><h4>Info about some shit</h4></div>
         <div className="Messages">
+        {socket ? socket.disconnected ? 
+        <div className="chatDisconnected"><BlockIcon/><span>Chat disconnected</span></div> : null
+        : null}
         {
            user ?  messages.map((el,i)=>{
                 return <ChatMessage key={i} author={el.author} message={el.message} />
