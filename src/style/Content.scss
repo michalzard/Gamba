@@ -2,7 +2,6 @@
 
 .navigation {
   background-color: $bg;
-
   .MuiButtonBase-root {
     color: #666666;
     height: 52px;
@@ -46,6 +45,7 @@
   width: 100%;
   background-color: $bg_content;
   color: white;
+  overflow: hidden;
 }
 
 //removed border radius so that there are no pixels that arent being colored in dialog menu
@@ -167,5 +167,16 @@
     border: 2px solid red;
     cursor: pointer;
     margin: 0px 40px 0px 40px;
+  }
+}
+
+.content2{
+  display:flex;
+  flex-direction: column;
+  flex:1;
+  height: 100%;
+  .games{
+    
+  height: 100%;
   }
 }

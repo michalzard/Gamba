@@ -6,6 +6,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from "axios";
 
+import Roulette from './Roulette';
 
 function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened}) {
     //tabs
@@ -43,14 +44,15 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         </div>
         </div>
        
-        <div>
+        <div className="content2">
         <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened} setUser={setUser}/>
         <div className="second_navigation">
         
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
-        <span>Content</span>
-        
+        <div className="games">
+        <Roulette/>
+        </div>
         </div>
 
        </div>
