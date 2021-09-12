@@ -1,0 +1,143 @@
+@import "./Theme.scss";
+
+.roulette {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .game {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+
+    .history {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px;
+      width: 50%;
+
+      .last100boxes {
+        background-color: $pinkred;
+      }
+
+      .last100 {
+        color: gray;
+
+        .reds {
+          margin: 10px;
+          color: $pinkred;
+        }
+
+        .greens {
+          margin: 10px;
+          color: greenyellow;
+        }
+
+        .blacks {
+          margin: 10px;
+          color: gray;
+        }
+      }
+    }
+
+    .progressBar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 25px;
+      width: 50%;
+      background-color: $bg_content2;
+      border-radius: 5px;
+      margin: 20px;
+
+      .insideProgress {
+        background-color: $pinkred;
+        width: 100%;
+        height: 25px;
+        border-radius: 5px;
+      }
+
+      .text {
+        position: absolute;
+        width: inherit;
+        text-align: center;
+        color: white;
+        font-weight: bold;
+      }
+    }
+
+
+  }
+
+  .colorBoxes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 15px;
+    width: 50%;
+    background-color: $bg;
+    border-top: 2px solid $pinkred;
+    border-bottom: 2px solid $pinkred;
+    border-radius: 5px;
+
+    .box {
+      display: flex;
+      background-color: $pinkred;
+      align-items: center;
+      justify-content: center;
+      margin: 2px;
+      border-radius: 5px;
+      min-width: 60px;
+      min-height: 60px;
+
+      .boxNumber {
+        color: white;
+        font-size: larger;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .betControls {
+    display: flex;
+    width: 50%;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+
+    .balance {
+      display: flex;
+      background-color: $bg;
+      border-radius: 5px;
+      justify-content: space-between;
+      align-items: center;
+      width: 20%;
+      height: 50px;
+        svg{
+            margin:20px;
+            color:gray;
+        }
+      .amount {
+        color:$pinkred;
+        margin:10px;
+      }
+    }
+    .controls{
+        display: flex;
+        background-color: $bg;
+        border-radius: 5px;
+        justify-content: space-between;
+        align-items: center;
+        width:80%;
+        margin-left:10px;
+        height: 50px;
+    }
+  }
+
+}
