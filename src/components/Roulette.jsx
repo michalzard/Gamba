@@ -2,6 +2,7 @@ import React,{useEffect,useState} from 'react'
 import "../style/Roulette.scss";
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import PersonIcon from '@material-ui/icons/Person';
 import {TextField,Button} from '@material-ui/core';
 
 function Roulette({user}) {
@@ -78,8 +79,25 @@ function Roulette({user}) {
             <Button variant="text" className="greenBet">Green</Button>
             <Button variant="text" className="blackBet">Black</Button>
             </div>
+            <div className="betInfo">
+            <div className="redOverall">
+            <span><PersonIcon/> 0 </span> 
+            <span><LocalAtmIcon/> 0 </span>
+             </div>
+            <div className="greenOverall">
+            <span><PersonIcon/> 0 </span>
+            <span><LocalAtmIcon/> 0 </span>
+            </div>
+            <div className="blackOverall">
+            <span><PersonIcon/> 0 </span>
+            <span><LocalAtmIcon/> 0 </span>
+            </div>
+            </div>
+           <div className="lastBets">
+           <div className="highest"> </div>    
+           <div className="rest"> </div>
+           </div>
 
-           <div className="lastBets">current bets</div>
            </div>
         </div>
     )

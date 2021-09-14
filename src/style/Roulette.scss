@@ -11,7 +11,17 @@
   border-bottom: 1px solid $colorValue;
   
 }
-
+@mixin betOverall($colorProperty,$colorValue) {
+  display:flex;
+  justify-content: space-between;
+  width:300px;
+  #{$colorProperty} : $colorValue;
+  svg{
+    width:20px;
+    height: 20px;
+  }
+  padding-right: 10px;
+}
 .roulette {
   display: flex;
   height: 100%;
@@ -171,6 +181,25 @@
   .blackBet{
     @include betButton(color,gray);
   }
+  }
+  .betInfo{
+    display:flex;
+    width:50%;
+    align-items: center;
+    justify-content: center;
+    padding-left:10px;
+    padding-right:10px;
+    .redOverall{
+      @include betOverall(color,$pinkred);
+    }
+    .greenOverall{
+      @include betOverall(color,greenyellow);
+
+    }
+    .blackOverall{
+      @include betOverall(color,gray);
+
+    }
   }
 }
 
