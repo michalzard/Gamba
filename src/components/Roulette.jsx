@@ -1,10 +1,11 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState} from 'react'
 import "../style/Roulette.scss";
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import {TextField} from '@material-ui/core';
+import {TextField,Button} from '@material-ui/core';
 
-function Roulette() {
+function Roulette({user}) {
+    const [betAmount,setBetAmount]=useState(0);
     const initBoxes=(boxDiv)=>{
         const amountOfBoxes=30;
         for(let i=1;i<amountOfBoxes+1;i++){
@@ -24,6 +25,17 @@ function Roulette() {
     return ()=>{if(boxDiv){boxDiv=null;}}
     },[]);
 
+    const onAmountChange=(e)=>{
+        setBetAmount(e.target.value);
+    }
+
+    const changeCurrentBet=(amount)=>{
+    setBetAmount(amount);
+    }
+
+    const clearCurrentBet=()=>{
+        setBetAmount(0);
+    }
     return (
         <div className="roulette">
         <div className="game">
@@ -43,14 +55,30 @@ function Roulette() {
            <div className="colorBoxes"/>
            <div className="betControls">
             <div className="balance">
-            <LocalAtmIcon/> <span className="amount">6666</span> <RefreshIcon/>
+            <LocalAtmIcon/> <span className="amount">{user ? user.balance : 0}</span> <RefreshIcon/>
             </div>
             <div className="controls">
-            <TextField placeholder="amount" color="secondary" label="Bet" InputLabelProps={{style:{color:"gray"}}} InputProps={{style:{color:"white"}}}/>
+            <div className="betField">
+            <TextField type={"number"} placeholder="0" color="secondary" 
+            onChange={(e)=>{onAmountChange(e);}} value={betAmount}   InputLabelProps={{style:{color:"gray"}}} InputProps={{style:{color:"white"}}}/>
+            {/* make number type  */}
+            </div>
+            <div className="ctrlButtons">
+            <Button variant="text" size="small" color="secondary" onClick={()=>{clearCurrentBet();}}>Clear</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(Math.floor(betAmount/2));}}>1/2</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+10);}}>+10</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+1000);}}>+1k</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+10000);}}>+10k</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(user.balance)}}>Max</Button>
+            </div>
+            </div>
+           </div>
+           <div className="betButtons">
+            <Button variant="text" className="redBet">Red</Button>
+            <Button variant="text" className="greenBet">Green</Button>
+            <Button variant="text" className="blackBet">Black</Button>
             </div>
 
-
-           </div>
            <div className="lastBets">current bets</div>
            </div>
         </div>

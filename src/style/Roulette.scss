@@ -1,5 +1,17 @@
 @import "./Theme.scss";
 
+@mixin betButton($colorProperty,$colorValue) {
+  #{$colorProperty} : $colorValue;
+  background-color: $bg; //from theme.scss
+  flex:1;
+  margin:10px;
+  height: 60px;
+  border-radius: 6px;
+  border-top: 1px solid $colorValue;
+  border-bottom: 1px solid $colorValue;
+  
+}
+
 .roulette {
   display: flex;
   height: 100%;
@@ -20,7 +32,6 @@
       justify-content: space-between;
       margin: 10px;
       width: 50%;
-
       .last100boxes {
         background-color: $pinkred;
       }
@@ -117,7 +128,7 @@
       border-radius: 5px;
       justify-content: space-between;
       align-items: center;
-      width: 20%;
+      width: 250px;
       height: 50px;
         svg{
             margin:20px;
@@ -126,18 +137,40 @@
       .amount {
         color:$pinkred;
         margin:10px;
+        overflow: hidden;
       }
     }
     .controls{
         display: flex;
         background-color: $bg;
         border-radius: 5px;
-        justify-content: space-between;
         align-items: center;
-        width:80%;
+        width:650px;
         margin-left:10px;
         height: 50px;
+        .betField{
+          padding-left:10px;
+        }
+        .ctrlButtons{
+          margin:10px;
+          button{color:white;}
+        }
     }
   }
-
+  .betButtons{
+  display:flex;
+  width: 50%;
+  align-items: center;
+  justify-content: space-between;
+  .redBet{
+    @include betButton(color,$pinkred);
+  }
+  .greenBet{
+    @include betButton(color,greenyellow);
+  }
+  .blackBet{
+    @include betButton(color,gray);
+  }
+  }
 }
+
