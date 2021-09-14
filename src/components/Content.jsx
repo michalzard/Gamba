@@ -51,7 +51,7 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
         <div className="games">
-        <Roulette/>
+        <Roulette user={user}/>
         </div>
         </div>
 
