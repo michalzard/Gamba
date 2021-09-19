@@ -1,27 +1,59 @@
 @import "./Theme.scss";
 
-@mixin betButton($colorProperty,$colorValue) {
-  #{$colorProperty} : $colorValue;
+@mixin betButton($colorValue) {
+  color: $colorValue;
   background-color: $bg; //from theme.scss
-  flex:1;
-  margin:10px;
+  flex: 1;
+  margin: 10px;
   height: 60px;
   border-radius: 6px;
-  border-top: 1px solid $colorValue;
-  border-bottom: 1px solid $colorValue;
-  
+  border-top: 2px solid $colorValue;
+  border-bottom: 2px solid $colorValue;
 }
-@mixin betOverall($colorProperty,$colorValue) {
-  display:flex;
+
+@mixin betOverall($colorValue) {
+  display: flex;
   justify-content: space-between;
-  width:300px;
-  #{$colorProperty} : $colorValue;
-  svg{
-    width:20px;
+  width: 300px;
+  color: $colorValue;
+
+  svg {
+    width: 20px;
     height: 20px;
   }
+
   padding-right: 10px;
 }
+
+@mixin highestBet($colorValue) {
+  color: $colorValue;
+  flex: 1;
+  display: flex;
+  height: 40px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid $colorValue;
+
+  //avatar
+  .MuiAvatar-root {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+  }
+
+  .userBetAmount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+
+    svg {
+      margin: 5px;
+    }
+  }
+}
+
 .roulette {
   display: flex;
   height: 100%;
@@ -42,6 +74,7 @@
       justify-content: space-between;
       margin: 10px;
       width: 50%;
+
       .last100boxes {
         background-color: $pinkred;
       }
@@ -140,66 +173,151 @@
       align-items: center;
       width: 250px;
       height: 50px;
-        svg{
-            margin:20px;
-            color:gray;
-        }
+
+      svg {
+        margin: 20px;
+        color: gray;
+      }
+
       .amount {
-        color:$pinkred;
-        margin:10px;
+        color: $pinkred;
+        margin: 10px;
         overflow: hidden;
       }
     }
-    .controls{
-        display: flex;
-        background-color: $bg;
-        border-radius: 5px;
-        align-items: center;
-        width:650px;
-        margin-left:10px;
-        height: 50px;
-        .betField{
-          padding-left:10px;
+
+    .controls {
+      display: flex;
+      background-color: $bg;
+      border-radius: 5px;
+      align-items: center;
+      width: 650px;
+      margin-left: 10px;
+      height: 50px;
+
+      .betField {
+        padding-left: 10px;
+      }
+
+      .ctrlButtons {
+        margin: 10px;
+
+        button {
+          color: white;
         }
-        .ctrlButtons{
-          margin:10px;
-          button{color:white;}
-        }
+      }
     }
   }
-  .betButtons{
-  display:flex;
-  width: 50%;
-  align-items: center;
-  justify-content: space-between;
-  .redBet{
-    @include betButton(color,$pinkred);
+
+  .betButtons {
+    display: flex;
+    width: 50%;
+    align-items: center;
+    justify-content: space-between;
+
+    .redBet {
+      @include betButton($pinkred);
+    }
+
+    .greenBet {
+      @include betButton(greenyellow);
+    }
+
+    .blackBet {
+      @include betButton(gray);
+    }
   }
-  .greenBet{
-    @include betButton(color,greenyellow);
-  }
-  .blackBet{
-    @include betButton(color,gray);
-  }
-  }
-  .betInfo{
-    display:flex;
-    width:50%;
+
+  .betInfo {
+    display: flex;
+    width: 50%;
     align-items: center;
     justify-content: center;
-    padding-left:10px;
-    padding-right:10px;
-    .redOverall{
-      @include betOverall(color,$pinkred);
+    padding-left: 10px;
+    padding-right: 10px;
+
+    .redOverall {
+      @include betOverall($pinkred);
     }
-    .greenOverall{
-      @include betOverall(color,greenyellow);
+
+    .greenOverall {
+      @include betOverall(greenyellow);
 
     }
-    .blackOverall{
-      @include betOverall(color,gray);
+
+    .blackOverall {
+      @include betOverall(gray);
 
     }
   }
-}
 
+  .lastBets {
+    display: flex;
+    height: 300px;
+    width: 50%;
+
+    .userBet {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      .userInfo {
+        padding:5px;
+        //avatar
+        .MuiAvatar-root {
+          width: 30px;
+          height: 30px;
+          margin-right: 8px;
+        }
+      }
+
+      .userBetAmount {
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .red {
+      flex: 1;
+      margin: 10px;
+
+      .highestRed {
+        @include highestBet($pinkred);
+      }
+
+      .smallerReds {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: $pinkred;
+        font-size: small;
+
+      }
+    }
+
+    .green {
+      flex: 1;
+      margin: 10px;
+
+      .highestGreen {
+        @include highestBet(greenyellow);
+      }
+    }
+
+    .black {
+      flex: 1;
+      margin: 10px;
+
+      .highestBlack {
+        @include highestBet(gray);
+
+      }
+    }
+  }
+
+}

@@ -3,7 +3,7 @@ import "../style/Roulette.scss";
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import PersonIcon from '@material-ui/icons/Person';
-import {TextField,Button} from '@material-ui/core';
+import {TextField,Button,Avatar} from '@material-ui/core';
 
 function Roulette({user}) {
     const [betAmount,setBetAmount]=useState(0);
@@ -94,8 +94,34 @@ function Roulette({user}) {
             </div>
             </div>
            <div className="lastBets">
-           <div className="highest"> </div>    
-           <div className="rest"> </div>
+           <div className="red">
+            <div className="highestRed">
+            <UserBetInfo/>
+            </div>
+            <div className="smallerReds">
+            <UserBetInfo/>
+            <UserBetInfo/>
+            <UserBetInfo/>
+            <UserBetInfo/>
+            </div>
+           </div>
+           <div className="green">
+            <div className="highestGreen">
+            some username
+            </div>
+            <div className="smallerGreens">
+
+            </div>
+           </div>
+           <div className="black">
+            <div className="highestBlack">
+            some username
+            </div>
+            <div className="smallerblacks">
+
+            </div>
+           </div>
+
            </div>
 
            </div>
@@ -104,3 +130,12 @@ function Roulette({user}) {
 }
 
 export default Roulette;
+
+function UserBetInfo(){
+    return (
+        <div className="userBet">
+        <span className="userInfo"><Avatar/> some username</span>
+        <span className="userBetAmount"><LocalAtmIcon/>0</span>
+        </div>
+    )
+}
