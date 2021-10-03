@@ -49,7 +49,8 @@ const registeredUser=new User({email,name,password:hashedPw});
 await registeredUser.save();
 if(registeredUser){
 req.session.user_id=registeredUser._id;
-res.send({message:"User registered successfully",sessionID:req.session.id});
+const foundSession=await mongoose.connection.db.collection("sessions").findOne({'session.user_id':foundUser._id});
+res.send({message:"User registered successfully",sessionID:foundSession._id});
 }
 }catch(err){
 console.log(err);
@@ -63,10 +64,10 @@ const {name,password}=req.body;
 const foundUser=await User.findOne({name});
 if(foundUser){
     const validatedPw=await bcrypt.compare(password,foundUser.password);
-  
+    req.session.user_id=foundUser._id;
+    const foundSession=await mongoose.connection.db.collection("sessions").findOne({'session.user_id':foundUser._id});
     if(validatedPw){
-        req.session.user_id=foundUser._id;
-        res.send({message:"Login successful",sessionID:req.session.id});
+        res.send({message:"Login successful",sessionID: foundSession._id});
     }else{
         res.send({message:"Username or password you entered is incorrect"});
     }
@@ -98,11 +99,13 @@ app.get('/session',async(req,res)=>{
     const {lastSession}=req.query;
     try{
     const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:lastSession});
-
+    console.log(foundSession);
     if(foundSession){
     const{_id}=foundSession;
+    console.log("Session found  "+_id);
     res.send({message:"Session found",sessionID:_id});
     }else{
+    console.log("Session wasn't found");
     res.send({message:"Session wasn't found"});
     }
     }catch(err){
@@ -117,12 +120,13 @@ try{
     const foundSession=await mongoose.connection.db.collection("sessions").findOne({_id:id});
     const {user_id}=foundSession.session;
 
-if(mongoose.isValidObjectId(user_id)){
+if(mongoose.isValidObjectId(user_id) && user_id){
     const requestID=mongoose.Types.ObjectId(user_id);
     const foundUser=await User.findById(requestID,{_id:0,password:0});
 
     res.send({message:"Member found!",user:foundUser});
-}else{
+}
+else{
     res.send({message:"Member not found or session invalid"});
 }
 }catch(err){

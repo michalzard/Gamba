@@ -87,12 +87,15 @@ const registerUser=()=>{
         password:document.getElementsByClassName("pw")[0].children[1].children[0].value,
     }).then(data=>{
     const {sessionID}=data.data;
-    localStorage.setItem('session',sessionID);
+    localStorage.setItem('sessionID',sessionID);
+    console.log(`register fetch ${data.data}`);
     setSessionID(sessionID);
     setLoginOpened(false);
     //get user data
     axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
         const {user}=data.data;
+        console.log(`from register part member fetch`);
+        console.log(data.data);
         setUser(user);
     });
     });
@@ -108,15 +111,27 @@ const loginUser=()=>{
         password:document.getElementsByClassName("pw")[0].children[1].children[0].value,
     }).then(data=>{
     const {message,sessionID}=data.data;
+    console.log(`login fetch`);
+    console.log(data.data);
     setWarning(message);
+    if(message.includes('Login successful')){
     localStorage.setItem('sessionID',sessionID);
     setSessionID(sessionID);
     setLoginOpened(false);
     //get user data
     axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
         const {user}=data.data;
+        console.log(`from login part member fetch`);
+        console.log(data.data)
         setUser(user);
     });
+    }
+    //if login is incorrect keep showing dialog window but remove session object from localstorage if present
+    else{
+        localStorage.removeItem('sessionID');
+        setLoginOpened(true);
+    }
+    
     });
 }
 

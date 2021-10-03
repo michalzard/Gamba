@@ -14,12 +14,13 @@ function App() {
     const [loginOpened,setLoginOpened]=useState(false);
     useEffect(() => {
         if(localStorage.getItem("sessionID")){
-        setSessionID(localStorage.getItem("sessionID"))
+        setSessionID(localStorage.getItem("sessionID"));
+        //failing if sessionID is set as undefined
         axios.get(`http://localhost:3001/session?lastSession=${localStorage.getItem("sessionID")}`).then(data=>{
         const {message,sessionID}=data.data;
+        console.log(data.data);
         if(message.includes("Session wasn't found")){setSessionID(null);localStorage.removeItem("sessionID");}
-    
-          axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
+        axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
         const {user}=data.data;
         setUser(user);
         });
