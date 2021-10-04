@@ -4,8 +4,9 @@ import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import PersonIcon from '@material-ui/icons/Person';
 import {TextField,Button,Avatar} from '@material-ui/core';
+import axios from "axios";
 
-function Roulette({user}) {
+function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets}) {
     const [betAmount,setBetAmount]=useState(0);
     const initBoxes=(boxDiv)=>{
         const amountOfBoxes=30;
@@ -37,6 +38,15 @@ function Roulette({user}) {
     const clearCurrentBet=()=>{
         setBetAmount(0);
     }
+
+
+    const submitCurrentBet=(color)=>{
+    const betAmount=parseInt(document.getElementsByClassName('betAmountInputField')[0].children[0].children[0].value);
+    const balanceDiff=user.balance-=betAmount;//updates balance showed on profile
+    axios.post("http://localhost:3001/balance",{id:sessionID,balance:balanceDiff});
+    socket.emit('bet',{user,color,betAmount});
+    }
+
     return (
         <div className="roulette">
         <div className="game">
@@ -49,8 +59,8 @@ function Roulette({user}) {
             </span>
            </div>
            <div className="progressBar">
-            <div className="insideProgress"/>
-           <span className="text">Spinning in ...</span>
+            <div className="insideProgress" style={{width:rouletteTimer ? `${(rouletteTimer/15)*100}%` : '100%'}}/>
+           <span className="text">Spinning in {rouletteTimer ? rouletteTimer : "..."}</span>
           </div>
 
            <div className="colorBoxes"/>
@@ -60,14 +70,14 @@ function Roulette({user}) {
             </div>
             <div className="controls">
             <div className="betField">
-            <TextField type={"number"} placeholder="0" color="secondary" 
+            <TextField type={"number"} placeholder="0" color="secondary" className="betAmountInputField"
             onChange={(e)=>{onAmountChange(e);}} value={betAmount}   InputLabelProps={{style:{color:"gray"}}} InputProps={{style:{color:"white"}}}/>
             {/* make number type  */}
             </div>
             <div className="ctrlButtons">
             <Button variant="text" size="small" color="secondary" onClick={()=>{clearCurrentBet();}}>Clear</Button>
             <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(Math.floor(betAmount/2));}}>1/2</Button>
-            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+10);}}>+10</Button>
+            <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+100);}}>+100</Button>
             <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+1000);}}>+1k</Button>
             <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(betAmount+10000);}}>+10k</Button>
             <Button variant="text" size="small" color="secondary" onClick={()=>{changeCurrentBet(user.balance)}}>Max</Button>
@@ -75,9 +85,9 @@ function Roulette({user}) {
             </div>
            </div>
            <div className="betButtons">
-            <Button variant="text" className="redBet">Red</Button>
-            <Button variant="text" className="greenBet">Green</Button>
-            <Button variant="text" className="blackBet">Black</Button>
+            <Button variant="text" className="redBet" onClick={()=>{submitCurrentBet("red");}}>Red</Button>
+            <Button variant="text" className="greenBet" onClick={()=>{submitCurrentBet("green");}}>Green</Button>
+            <Button variant="text" className="blackBet" onClick={()=>{submitCurrentBet("black");}}>Black</Button>
             </div>
             <div className="betInfo">
             <div className="redOverall">
@@ -96,29 +106,43 @@ function Roulette({user}) {
            <div className="lastBets">
            <div className="red">
             <div className="highestRed">
-            <UserBetInfo/>
+            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
             </div>
             <div className="smallerReds">
-            <UserBetInfo/>
-            <UserBetInfo/>
-            <UserBetInfo/>
-            <UserBetInfo/>
+            {
+                rouletteBets.map((bet,i)=>{ 
+                return bet.color==="red" ? <UserBetInfo key={i} username={bet.user.name} betAmount={bet.betAmount}/> 
+                : null
+                })
+            }
             </div>
            </div>
            <div className="green">
             <div className="highestGreen">
-            some username
+            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
+
             </div>
             <div className="smallerGreens">
-
+            {
+                rouletteBets.map((bet,i)=>{ 
+                return bet.color==="green" ? <UserBetInfo key={i} username={bet.user.name} betAmount={bet.betAmount}/> 
+                : null
+                })
+            }
             </div>
            </div>
            <div className="black">
             <div className="highestBlack">
-            some username
-            </div>
-            <div className="smallerblacks">
+            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
 
+            </div>
+            <div className="smallerBlacks">
+            {
+                rouletteBets.map((bet,i)=>{ 
+                return bet.color==="black" ? <UserBetInfo key={i} username={bet.user.name} betAmount={bet.betAmount}/> 
+                : null
+                })
+            }
             </div>
            </div>
 
@@ -131,11 +155,11 @@ function Roulette({user}) {
 
 export default Roulette;
 
-function UserBetInfo(){
+function UserBetInfo({username,betAmount}){
     return (
         <div className="userBet">
-        <span className="userInfo"><Avatar/> some username</span>
-        <span className="userBetAmount"><LocalAtmIcon/>0</span>
+        <span className="userInfo"><Avatar/>{username ? username : null}</span>
+        <span className="userBetAmount"><LocalAtmIcon/>{betAmount ? betAmount : 0}</span>
         </div>
     )
 }
