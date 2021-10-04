@@ -27,8 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "authServer-dev": "nodemon ./src/authServer/index.js",
-    "chatServer-dev": "nodemon ./src/chatServer/index.js"
+    "server-dev": "nodemon ./src/server/index.js"
   },
   "eslintConfig": {
     "extends": [
