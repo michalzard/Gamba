@@ -1,27 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react';
 import "../style/Chat.scss";
 import SendIcon from '@material-ui/icons/Send';
-import {io} from "socket.io-client";
 import { Avatar } from '@material-ui/core';
 import BlockIcon from '@material-ui/icons/Block';
 
 
-function Chat({user,setLoginOpened}) {
-    const [socket,setSocket]=useState(null);
-    const [messages,setMessages]=useState([]);
+function Chat({user,setLoginOpened,socket,messages,setMessages}) {
 
-    useEffect(()=>{
-    if(user!==null){
-    const socket=io('http://localhost:3002');
-    setSocket(socket);
-    socket.on("message",(data)=>{
-    //show messages that were emitted to chat server in chatbox
-    setMessages((prev)=>[...prev,data]);
-    });
-    return ()=>socket.close();    
-}
-    
-    },[user]);
 
     const sendMessageToChat=()=>{
         if(socket && user){
@@ -31,7 +16,6 @@ function Chat({user,setLoginOpened}) {
         if(textBox.value.length>0){ 
         socket.emit('message',data);
         setMessages((prev)=>[...prev,data]);
-        console.log(messages);
         textBox.value='';    
         }
 
