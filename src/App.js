@@ -4,6 +4,7 @@ import Content from "./components/Content";
 import Chat from "./components/Chat";
 import { useState,useEffect } from "react";
 import axios from "axios";
+import {io} from "socket.io-client";
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
     
     //login popup states
     const [loginOpened,setLoginOpened]=useState(false);
+    
     useEffect(() => {
         if(localStorage.getItem("sessionID")){
         setSessionID(localStorage.getItem("sessionID"));
@@ -29,12 +31,39 @@ function App() {
       }
     }, []);
 
+    //socket states
+    const [socket,setSocket]=useState(null);
+    const [messages,setMessages]=useState([]);
+    const [rouletteTimer,setRouletteTimer]=useState(0);
+    const [rouletteBets,setRouletteBets]=useState([]);
+
+    useEffect(()=>{
+      if(user!==null){
+      const socket=io('http://localhost:3002');
+      setSocket(socket);
+      socket.on("message",(data)=>{
+      //show messages that were emitted to chat server in chatbox
+      setMessages((prev)=>[...prev,data]);
+      });
+      socket.on("rouletteTimer",(timer)=>{
+        setRouletteTimer(timer);
+      });
+
+      socket.on("roulette.allBets",(bets)=>{
+        setRouletteBets(bets);
+      });
+
+      return ()=>socket.close();    
+      }
+      },[user]);
+
   return (
     <div className="App">
     <CssBaseline/>
-    <Chat user={user} setLoginOpened={setLoginOpened} />
-    <Content setLoginOpened={setLoginOpened} loginOpened={loginOpened}
-    sessionID={sessionID} setSessionID={setSessionID} setUser={setUser} user={user}/>
+    <Chat user={user} setLoginOpened={setLoginOpened} socket={socket} setMessages={setMessages} messages={messages} />
+    <Content setLoginOpened={setLoginOpened} loginOpened={loginOpened} socket={socket} sessionID={sessionID} setSessionID={setSessionID}
+    rouletteTimer={rouletteTimer} rouletteBets={rouletteBets}
+    setUser={setUser} user={user}/>
     </div>
   );
 }
