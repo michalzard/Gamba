@@ -8,7 +8,7 @@ import axios from "axios";
 
 import Roulette from './Roulette';
 
-function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened}) {
+function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets}) {
     //tabs
     const [selected,setSelected]=useState(1);
     const closeLoginDialog=()=>{
@@ -51,7 +51,7 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
         <div className="games">
-        <Roulette user={user}/>
+        <Roulette user={user} sessionID={sessionID} socket={socket} rouletteTimer={rouletteTimer} rouletteBets={rouletteBets}/>
         </div>
         </div>
 
@@ -85,21 +85,8 @@ const registerUser=()=>{
         email:document.getElementsByClassName("em")[0].children[1].children[0].value,
         name:document.getElementsByClassName("nm")[0].children[1].children[0].value,
         password:document.getElementsByClassName("pw")[0].children[1].children[0].value,
-    }).then(data=>{
-    const {sessionID}=data.data;
-    localStorage.setItem('sessionID',sessionID);
-    console.log(`register fetch ${data.data}`);
-    setSessionID(sessionID);
-    setLoginOpened(false);
-    //get user data
-    axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
-        const {user}=data.data;
-        console.log(`from register part member fetch`);
-        console.log(data.data);
-        setUser(user);
     });
-    });
-   
+    setDisplay("Login");   
 }
 
 /**
@@ -111,8 +98,6 @@ const loginUser=()=>{
         password:document.getElementsByClassName("pw")[0].children[1].children[0].value,
     }).then(data=>{
     const {message,sessionID}=data.data;
-    console.log(`login fetch`);
-    console.log(data.data);
     setWarning(message);
     if(message.includes('Login successful')){
     localStorage.setItem('sessionID',sessionID);
@@ -121,8 +106,6 @@ const loginUser=()=>{
     //get user data
     axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
         const {user}=data.data;
-        console.log(`from login part member fetch`);
-        console.log(data.data)
         setUser(user);
     });
     }
