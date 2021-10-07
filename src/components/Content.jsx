@@ -8,7 +8,7 @@ import axios from "axios";
 
 import Roulette from './Roulette';
 
-function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets}) {
+function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets,currentWin}) {
     //tabs
     const [selected,setSelected]=useState(1);
     const closeLoginDialog=()=>{
@@ -51,7 +51,8 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
         <div className="games">
-        <Roulette user={user} sessionID={sessionID} socket={socket} rouletteTimer={rouletteTimer} rouletteBets={rouletteBets}/>
+        <Roulette user={user} sessionID={sessionID} socket={socket} 
+        rouletteTimer={rouletteTimer} rouletteBets={rouletteBets} currentWin={currentWin}/>
         </div>
         </div>
 
