@@ -247,19 +247,18 @@ class Roulette {
     this.currentBets = [];
     io.sockets.emit('roulette.allBets', this.currentBets);
   }
-
+  
   static generateWinningRound(){
-    const numbers=[];
-    for(let i=0;i<14;i++)numbers.push(i);
     const winningColor=()=>{
     const rnd=Math.floor(Math.random()*100);
-    const rndnum=Math.floor(Math.random()*15)+1;
+    const rndnum=Math.floor(Math.random()*14)+1;
     if(rnd<=45){return {number:rndnum,color:"red"}};
     if(rnd>45 && rnd<55){return {number:0,color:"green"}};
     if(rnd>=55){return {number:rndnum,color:"black"}};
     }
-    
-    console.log(winningColor());
+
+    io.sockets.emit('roulette.win',winningColor());
+
   }
 
 }
