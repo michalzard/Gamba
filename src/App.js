@@ -36,21 +36,19 @@ function App() {
     const [messages,setMessages]=useState([]);
     const [rouletteTimer,setRouletteTimer]=useState(0);
     const [rouletteBets,setRouletteBets]=useState([]);
+    const [currentWin,setCurrentWin]=useState({});
 
     useEffect(()=>{
       if(user!==null){
       const socket=io('http://localhost:3002');
       setSocket(socket);
-      socket.on("message",(data)=>{
       //show messages that were emitted to chat server in chatbox
-      setMessages((prev)=>[...prev,data]);
-      });
-      socket.on("rouletteTimer",(timer)=>{
-        setRouletteTimer(timer);
-      });
-
-      socket.on("roulette.allBets",(bets)=>{
-        setRouletteBets(bets);
+      socket.on("message",(data)=>setMessages((prev)=>[...prev,data]));
+      //roulette info
+      socket.on("rouletteTimer",(timer)=>setRouletteTimer(timer));
+      socket.on("roulette.allBets",(bets)=>setRouletteBets(bets));
+      socket.on("roulette.win",(winData)=>{
+        setCurrentWin(winData);
       });
 
       return ()=>socket.close();    
@@ -62,7 +60,7 @@ function App() {
     <CssBaseline/>
     <Chat user={user} setLoginOpened={setLoginOpened} socket={socket} setMessages={setMessages} messages={messages} />
     <Content setLoginOpened={setLoginOpened} loginOpened={loginOpened} socket={socket} sessionID={sessionID} setSessionID={setSessionID}
-    rouletteTimer={rouletteTimer} rouletteBets={rouletteBets}
+    rouletteTimer={rouletteTimer} rouletteBets={rouletteBets} currentWin={currentWin}
     setUser={setUser} user={user}/>
     </div>
   );
