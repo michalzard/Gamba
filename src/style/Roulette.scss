@@ -145,12 +145,15 @@
     border-top: 2px solid $pinkred;
     border-bottom: 2px solid $pinkred;
     border-radius: 5px;
-
+    
     .box {
       display: flex;
+      position:relative;//to be able to offset them with left,right all that good stuff
       background-color: $pinkred;
       align-items: center;
       justify-content: center;
+      transition-property: left;
+      transition-duration: 3s;//smooth transition when boxes are getting offsetted
       margin: 2px;
       border-radius: 5px;
       min-width: 60px;

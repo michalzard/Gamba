@@ -6,15 +6,22 @@ import PersonIcon from '@material-ui/icons/Person';
 import {TextField,Button,Avatar} from '@material-ui/core';
 import axios from "axios";
 
-function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets}) {
+function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin}) {
     const [betAmount,setBetAmount]=useState(0);
     const initBoxes=(boxDiv)=>{
-        const amountOfBoxes=30;
+        const amountOfBoxes=50;
         for(let i=1;i<amountOfBoxes+1;i++){
             const box=document.createElement("div");
-            box.className="box"
+            box.className="box";
+            //60 is min-width of boxes
+            box.style.left=`${amountOfBoxes*amountOfBoxes/2.5}px`;
+            
+            // if(i===amountOfBoxes/2)box.style.backgroundColor="pink";
+            if(i%2===0) box.style.backgroundColor="#c32d4f";
+            else box.style.backgroundColor="#2e2e36";
             const insideBox=document.createElement("span");
-            insideBox.innerHTML=`${i}`; // what number to show on box
+            const rnd=Math.floor(Math.random()*14)+1;
+            insideBox.innerHTML=rnd; // what number to show on box
             insideBox.className="boxNumber";
             box.appendChild(insideBox);
             boxDiv.appendChild(box);
@@ -24,8 +31,33 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets}) {
     useEffect(()=>{
     let boxDiv=document.getElementsByClassName("colorBoxes")[0];
     initBoxes(boxDiv);
+    
     return ()=>{if(boxDiv){boxDiv=null;}}
     },[]);
+
+
+    useEffect(()=>{
+        //everytime new winning results comes in,run this
+        const roulette=document.getElementsByClassName("colorBoxes")[0];
+        //TODO : reroll from beggining  
+        for(let i=0;i<roulette.children.length;i++){
+            roulette.children[i].style.left=50*50/2.5+"px";
+        }
+        let middleBox=roulette.children[roulette.children.length/2-1];
+        if(currentWin.color && currentWin.number){
+        if(currentWin.color==="black") middleBox.style.backgroundColor="#2e2e36";
+        else if(currentWin.color==="red") middleBox.style.backgroundColor="#c32d4f";
+        else if(currentWin.color==="green") middleBox.style.backgroundColor="greenyellow";
+        //red = #c32d4f 
+        //black = #2e2e36
+        //
+        middleBox.children[0].innerHTML=currentWin.number;       
+        for(let i=0;i<roulette.children.length;i++){
+            roulette.children[i].style.left="0px";
+        }
+        }else return;
+
+    },[currentWin]);
 
     const onAmountChange=(e)=>{
         setBetAmount(e.target.value);
@@ -51,7 +83,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets}) {
         <div className="roulette">
         <div className="game">
            <div className="history">
-            <div className="last100boxes">tu budu posledne farby</div>
+            <div className="last100boxes">Current winning data : {currentWin.number} {currentWin.color} </div>
             <span className="last100">Last 100
             <span className="reds">40</span>
             <span className="greens">10</span>
