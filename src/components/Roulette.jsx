@@ -10,7 +10,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
     const [betAmount,setBetAmount]=useState(0);
     const initBoxes=(boxDiv)=>{
         const amountOfBoxes=50;
-        for(let i=1;i<amountOfBoxes+1;i++){
+        for(let i=0;i<amountOfBoxes;i++){
             const box=document.createElement("div");
             box.className="box";
             //60 is min-width of boxes
@@ -35,28 +35,29 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
     return ()=>{if(boxDiv){boxDiv=null;}}
     },[]);
 
+    // const restartRoulleteTrack=()=>{
+
+    // }
 
     useEffect(()=>{
         //everytime new winning results comes in,run this
         const roulette=document.getElementsByClassName("colorBoxes")[0];
-        //TODO : reroll from beggining  
+        let middleBox=roulette.children[25];
+
+        //TODO : reroll from beggining,1st element is pip so skip that  
+
         for(let i=0;i<roulette.children.length;i++){
             roulette.children[i].style.left=50*50/2.5+"px";
-        }
-        let middleBox=roulette.children[roulette.children.length/2-1];
-        if(currentWin.color && currentWin.number){
-        if(currentWin.color==="black") middleBox.style.backgroundColor="#2e2e36";
-        else if(currentWin.color==="red") middleBox.style.backgroundColor="#c32d4f";
-        else if(currentWin.color==="green") middleBox.style.backgroundColor="greenyellow";
-        //red = #c32d4f 
-        //black = #2e2e36
-        //
-        middleBox.children[0].innerHTML=currentWin.number;       
-        for(let i=0;i<roulette.children.length;i++){
-            roulette.children[i].style.left="0px";
-        }
-        }else return;
+        }    
 
+        console.log(currentWin.color,currentWin.number);
+        if(currentWin.color==="black") middleBox.style.backgroundColor="#2e2e36";
+        if(currentWin.color==="red") middleBox.style.backgroundColor="#c32d4f";
+        if(currentWin.color==="green") middleBox.style.backgroundColor="green";
+        
+        middleBox.style.border="2px solid orange"; 
+        if(currentWin.number>=0) middleBox.children[0].innerHTML=currentWin.number;        
+       
     },[currentWin]);
 
     const onAmountChange=(e)=>{
@@ -94,8 +95,9 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
             <div className="insideProgress" style={{width:rouletteTimer ? `${(rouletteTimer/15)*100}%` : '100%'}}/>
            <span className="text">Spinning in {rouletteTimer ? rouletteTimer : "..."}</span>
           </div>
-
+          
            <div className="colorBoxes"/>
+
            <div className="betControls">
             <div className="balance">
             <LocalAtmIcon/> <span className="amount">{user ? user.balance : 0}</span> <RefreshIcon/>
