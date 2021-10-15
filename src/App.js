@@ -47,9 +47,7 @@ function App() {
       //roulette info
       socket.on("rouletteTimer",(timer)=>setRouletteTimer(timer));
       socket.on("roulette.allBets",(bets)=>setRouletteBets(bets));
-      socket.on("roulette.win",(winData)=>{
-        setCurrentWin(winData);
-      });
+      socket.on("roulette.win",(winData)=>setCurrentWin(winData));
 
       return ()=>socket.close();    
       }
