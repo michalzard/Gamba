@@ -39,25 +39,64 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
 
     // }
 
-    useEffect(()=>{
-        //everytime new winning results comes in,run this
-        const roulette=document.getElementsByClassName("colorBoxes")[0];
-        let middleBox=roulette.children[25];
-
-        //TODO : reroll from beggining,1st element is pip so skip that  
-
+    const spinRoulette=(roulette,color)=>{
+   /**
+    * transition-property: left;
+    * transition-duration: 2s; 
+    * properties of boxTransition that are applied to make spin animation 
+    * and removed for reset portion of animation
+    */
+    for(let i=0;i<roulette.children.length;i++){
+        roulette.children[i].classList.remove("boxTransition");
+        roulette.children[i].style.left=roulette.children.length*50/2.5+"px";
+    } 
+    const spin=setTimeout(()=>{
         for(let i=0;i<roulette.children.length;i++){
-            roulette.children[i].style.left=50*50/2.5+"px";
-        }    
+        roulette.children[i].classList.add("boxTransition");
+        let offset="0px"; 
+        if(color==="red") offset="-95px"; //red
+        else offset="-35px";//black,green
 
-        console.log(currentWin.color,currentWin.number);
-        if(currentWin.color==="black") middleBox.style.backgroundColor="#2e2e36";
-        if(currentWin.color==="red") middleBox.style.backgroundColor="#c32d4f";
-        if(currentWin.color==="green") middleBox.style.backgroundColor="green";
+        roulette.children[i].style.left=offset; 
+        } 
+        clearTimeout(spin);
+    },1000);
+   
+    }
+
+
+
+    useEffect(()=>{
+
+        const roulette=document.getElementsByClassName("colorBoxes")[0];
+        const middleBox=roulette.children[currentWin.result ? currentWin.result.color==="red" ? 26 : 25 : 25]; 
         
-        middleBox.style.border="2px solid orange"; 
-        if(currentWin.number>=0) middleBox.children[0].innerHTML=currentWin.number;        
-       
+        console.log(currentWin);
+        //
+   
+        try{
+        if(currentWin.result) spinRoulette(roulette,currentWin.result.color);
+      
+        if(currentWin.result.color==="black"){
+        middleBox.style.backgroundColor="#2e2e36";
+        middleBox.style.border="2px solid orange";
+        roulette.children[26].style.border="none"; //red box need to be reset so its not displaying 2 diff highlights 
+        }
+        if(currentWin.result.color==="red"){
+        middleBox.style.backgroundColor="#c32d4f";
+        middleBox.style.border="2px solid orange";
+        roulette.children[25].style.border="none"; // same but for black/green
+        }
+        if(currentWin.result.color==="green"){
+        middleBox.style.border="2px solid orange";
+        middleBox.style.backgroundColor="green";
+        roulette.children[26].style.border="none"; // same but for red again
+        }
+        
+        if(currentWin.result.number>=0) middleBox.children[0].innerHTML=currentWin.result.number;        
+    }catch(err){
+        console.log(err.message);
+    }
     },[currentWin]);
 
     const onAmountChange=(e)=>{
@@ -74,17 +113,19 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
 
 
     const submitCurrentBet=(color)=>{
-    const betAmount=parseInt(document.getElementsByClassName('betAmountInputField')[0].children[0].children[0].value);
     const balanceDiff=user.balance-=betAmount;//updates balance showed on profile
+    if(betAmount>0 && betAmount<balanceDiff){
+    const betAmount=parseInt(document.getElementsByClassName('betAmountInputField')[0].children[0].children[0].value);
+    
     axios.post("http://localhost:3001/balance",{id:sessionID,balance:balanceDiff});
     socket.emit('bet',{user,color,betAmount});
-    }
+    }}
 
     return (
         <div className="roulette">
         <div className="game">
            <div className="history">
-            <div className="last100boxes">Current winning data : {currentWin.number} {currentWin.color} </div>
+            <div className="last100boxes">Results debug - {currentWin.result ? currentWin.result.number : null } {currentWin.result ? currentWin.result.color : null} </div>
             <span className="last100">Last 100
             <span className="reds">40</span>
             <span className="greens">10</span>
@@ -140,7 +181,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
            <div className="lastBets">
            <div className="red">
             <div className="highestRed">
-            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
+            highest red
             </div>
             <div className="smallerReds">
             {
@@ -153,8 +194,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
            </div>
            <div className="green">
             <div className="highestGreen">
-            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
-
+            highest green
             </div>
             <div className="smallerGreens">
             {
@@ -167,8 +207,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
            </div>
            <div className="black">
             <div className="highestBlack">
-            {/* && bet.betAmount!==Math.max(...rouletteBets.map(bet=>{return bet.betAmount}),0) */}
-
+            highest black
             </div>
             <div className="smallerBlacks">
             {
