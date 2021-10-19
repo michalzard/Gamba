@@ -239,13 +239,20 @@ class Roulette {
     }, 100);
 
   }
-
-  static addBet(betData) {
+  static async updateUserBalance(userData){
+    const foundUser=await User.findOne({'name':userData.user.name});
+    foundUser.balance+=userData.betAmount;
+    foundUser.save();
+    console.log(`${userData.user.name} bet ${userData.betAmount} on ${userData.color}`);
+  }
+  static async addBet(betData) {
+    if(betData.betAmount>0){
     this.currentBets.push(betData);
+    this.updateUserBalance(betData);
+  }
   }
   static clearBets() {
-    this.currentBets = [];
-    io.sockets.emit('roulette.allBets', this.currentBets);
+  this.currentBets = [];
   }
   
   static generateWinningRound(){
@@ -256,8 +263,35 @@ class Roulette {
     if(rnd>45 && rnd<55){return {number:0,color:"green"}};
     if(rnd>=55){return {number:rndnum,color:"black"}};
     }
+    const result=winningColor();
 
-    io.sockets.emit('roulette.win',winningColor());
+    try {
+        for(let i=0;i<this.currentBets.length;i++){
+        if(this.currentBets[i].color===result.color){
+          //when bet is won win by either 2x or 14x
+          switch(result.color){
+            case "red": this.currentBets[i].betAmount+=this.currentBets[i].betAmount; // x2
+            break;
+            case "green":this.currentBets[i].betAmount+=this.currentBets[i].betAmount*14; // x14
+            break;
+            case "black": this.currentBets[i].betAmount+=this.currentBets[i].betAmount; // x2
+            break;
+          }
+
+        }else{
+          this.currentBets[i].betAmount-=this.currentBets[i].betAmount*2;//  deduct from bet when bet is lost
+        }
+      }
+      //here bets are already determined won/lost so just add - or + value to user balance
+      for(let i=0;i<this.currentBets.length;i++){
+      this.updateUserBalance(this.currentBets[i]);
+      }
+
+      io.sockets.emit('roulette.win',{result,changedBalance:this.currentBets});
+    } catch (err) {
+      console.log(err);
+    }
+    
 
   }
 
