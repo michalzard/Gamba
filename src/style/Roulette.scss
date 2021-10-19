@@ -153,9 +153,7 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
       background-color: $pinkred;
       align-items: center;
       justify-content: center;
-      transition-property: left;
-      transition-duration: 3s; //smooth transition when boxes are getting offsetted
-      margin: 2px;
+    margin: 2px;
       border-radius: 5px;
       min-width: 60px;
       min-height: 60px;
@@ -167,7 +165,10 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
       }
     }
   }
-
+  .boxTransition{
+    transition-property: left;
+    transition-duration: 3s; //smooth transition when boxes are getting offsetted
+  }
   .betControls {
     display: flex;
     width: 50%;
