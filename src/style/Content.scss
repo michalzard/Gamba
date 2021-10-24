@@ -52,7 +52,16 @@
 .MuiPaper-rounded {
   border-radius: 0px !important;
 }
-
+.rewardTitle{
+  background-color: $bg_content;
+  color:white;
+}
+.rewardMenu{
+  background-color: $bg_content;
+  color:white;
+  display:flex;
+  flex-wrap: wrap;
+}
 .loginDialog {
   background-color: $bg_content2;
   color: white;
