@@ -8,13 +8,16 @@ import axios from "axios";
 
 import Roulette from './Roulette';
 
-function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets,currentWin}) {
+function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets,setRouletteBets,currentWin}) {
     //tabs
     const [selected,setSelected]=useState(1);
+    const [rewardsOpen,setRewardsOpen]=useState(false);
     const closeLoginDialog=()=>{
         setLoginOpened(false);
     }
-    
+    const closeRewardScreen=()=>{
+        setRewardsOpen(false);
+    }
     const logoutUser=()=>{
         //when already logged in so there's session already established
         axios.post(`http://localhost:3001/logout`,{
@@ -23,7 +26,6 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         setSessionID(null);
         setUser(null);
     }
-
     return (
        <div className="content">
 
@@ -35,7 +37,9 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
         <InteractiveButton text='Text 3' currentSelection={selected} setSelected={setSelected} selectedIndex={3}/>
         
         </div>
-
+        <div className='rewards'>
+        <Button color="secondary" variant="contained" className="loginBtn" onClick={()=>{setRewardsOpen(true);}}>Withdraw</Button>
+        </div>
         <div className="login">
         {/**TODO: show whole menu of actions once already logged in  */}
         {sessionID ? <UserInfo userBalance={user ? user.balance : null}/> : 
@@ -46,12 +50,13 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
        
         <div className="content2">
         <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened} setUser={setUser}/>
+        <RewardsScreen handleClose={closeRewardScreen} openBool={rewardsOpen}/>
         <div className="second_navigation">
         
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
         </div>
         <div className="games">
-        <Roulette user={user} sessionID={sessionID} socket={socket} 
+        <Roulette user={user} sessionID={sessionID} socket={socket} setRouletteBets={setRouletteBets}
         rouletteTimer={rouletteTimer} rouletteBets={rouletteBets} currentWin={currentWin}/>
         </div>
         </div>
@@ -61,7 +66,29 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
        
 }
 
-export default Navigation
+export default Navigation;
+/**
+ * REWARDS SCREEN WITH CUSTOM ELEMENTS
+ */
+function RewardsScreen({handleClose,openBool}){
+    return(
+        <Dialog onClose={handleClose} open={openBool} className="rewardScreen"
+        >
+        <DialogTitle className="rewardTitle">Withdraw rewards</DialogTitle>
+        <DialogContent className="rewardMenu">
+        <RewardsTile/>
+        </DialogContent>
+        </Dialog>
+    )
+}
+//TODO : CREATE LIKE PRODUCT TILE THAT SHOWS COST,SOME IMAGE OF REWARD AND DESCRIPTION WHAT IT DOES
+function RewardsTile(){
+    return (
+        <div className='rewardEl'>
+        <Button color="secondary" variant="contained" className="loginBtn">Kick</Button>
+        </div>
+    )
+}
 
 function InteractiveButton({ButtonIcon,selectedIndex,currentSelection,setSelected,text}){
     return(
