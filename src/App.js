@@ -20,7 +20,7 @@ function App() {
         //failing if sessionID is set as undefined
         axios.get(`http://localhost:3001/session?lastSession=${localStorage.getItem("sessionID")}`).then(data=>{
         const {message,sessionID}=data.data;
-        console.log(data.data);
+        // console.log(data.data);
         if(message.includes("Session wasn't found")){setSessionID(null);localStorage.removeItem("sessionID");}
         axios.post(`http://localhost:3001/member`,{id:sessionID}).then(data=>{
         const {user}=data.data;
@@ -58,7 +58,7 @@ function App() {
     <CssBaseline/>
     <Chat user={user} setLoginOpened={setLoginOpened} socket={socket} setMessages={setMessages} messages={messages} />
     <Content setLoginOpened={setLoginOpened} loginOpened={loginOpened} socket={socket} sessionID={sessionID} setSessionID={setSessionID}
-    rouletteTimer={rouletteTimer} rouletteBets={rouletteBets} currentWin={currentWin}
+    rouletteTimer={rouletteTimer} rouletteBets={rouletteBets} setRouletteBets={setRouletteBets} currentWin={currentWin}
     setUser={setUser} user={user}/>
     </div>
   );
