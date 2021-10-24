@@ -236,14 +236,13 @@ class Roulette {
           console.log(err);
         }
       }
-    }, 100);
+    }, 300);
 
   }
   static async updateUserBalance(userData){
     const foundUser=await User.findOne({'name':userData.user.name});
-    foundUser.balance+=userData.betAmount;
+    foundUser.balance+=userData.betAmount;//adds or deducts balance 
     foundUser.save();
-    console.log(`${userData.user.name} bet ${userData.betAmount} on ${userData.color}`);
   }
   static async addBet(betData) {
     if(betData.betAmount>0){
