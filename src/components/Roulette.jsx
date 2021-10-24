@@ -6,8 +6,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import {TextField,Button,Avatar} from '@material-ui/core';
 import axios from "axios";
 
-function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin}) {
+function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,setRouletteBets,currentWin}) {
     const [betAmount,setBetAmount]=useState(0);
+    const [betCount,setBetCount]=useState({});
+    const [betOverallAmount,setBetOverallAmount]=useState({});
+
+
     const initBoxes=(boxDiv)=>{
         const amountOfBoxes=50;
         for(let i=0;i<amountOfBoxes;i++){
@@ -31,13 +35,8 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
     useEffect(()=>{
     let boxDiv=document.getElementsByClassName("colorBoxes")[0];
     initBoxes(boxDiv);
-    
     return ()=>{if(boxDiv){boxDiv=null;}}
     },[]);
-
-    // const restartRoulleteTrack=()=>{
-
-    // }
 
     const spinRoulette=(roulette,color)=>{
    /**
@@ -61,22 +60,37 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
         } 
         clearTimeout(spin);
     },1000);
-   
     }
 
+    useEffect(()=>{
+    //update info about bets collectively like amount of bets for specific color and the overall amount
+    const reds=rouletteBets.filter(bet=>bet.color==="red");
+    const greens=rouletteBets.filter(bet=>bet.color==="green");
+    const blacks=rouletteBets.filter(bet=>bet.color==="black");
+    let redOverall=0;
+    let greenOverall=0;
+    let blackOverall=0;
+    for(let i=0;i<reds.length;i++){
+        redOverall+=reds[i].betAmount;
+    }
+    for(let i=0;i<greens.length;i++){
+        greenOverall+=greens[i].betAmount;
+    }
+    for(let i=0;i<blacks.length;i++){
+        blackOverall+=blacks[i].betAmount;
+    }
+    setBetCount({red:reds.length,green:greens.length,black:blacks.length});
+    setBetOverallAmount({red:redOverall,green:greenOverall,black:blackOverall});
 
+    },[rouletteBets]);
 
     useEffect(()=>{
-
         const roulette=document.getElementsByClassName("colorBoxes")[0];
         const middleBox=roulette.children[currentWin.result ? currentWin.result.color==="red" ? 26 : 25 : 25]; 
         
-        console.log(currentWin);
-        //
-   
         try{
         if(currentWin.result) spinRoulette(roulette,currentWin.result.color);
-      
+        if(currentWin.result){
         if(currentWin.result.color==="black"){
         middleBox.style.backgroundColor="#2e2e36";
         middleBox.style.border="2px solid orange";
@@ -91,13 +105,17 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
         middleBox.style.border="2px solid orange";
         middleBox.style.backgroundColor="green";
         roulette.children[26].style.border="none"; // same but for red again
-        }
-        
-        if(currentWin.result.number>=0) middleBox.children[0].innerHTML=currentWin.result.number;        
+         
+        }}else return;
+        if(currentWin.result.number>=0) middleBox.children[0].innerHTML=currentWin.result.number;     
+          
+        //if changedBalance isnt empty display what was changed on players's bets
+        if(currentWin.changedBalance)setRouletteBets(currentWin.changedBalance);
+
     }catch(err){
         console.log(err.message);
     }
-    },[currentWin]);
+    },[currentWin,setRouletteBets]);
 
     const onAmountChange=(e)=>{
         setBetAmount(e.target.value);
@@ -136,7 +154,6 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
             <div className="insideProgress" style={{width:rouletteTimer ? `${(rouletteTimer/15)*100}%` : '100%'}}/>
            <span className="text">Spinning in {rouletteTimer ? rouletteTimer : "..."}</span>
           </div>
-          
            <div className="colorBoxes"/>
 
            <div className="betControls">
@@ -160,28 +177,30 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
             </div>
            </div>
            <div className="betButtons">
-            <Button variant="text" className="redBet" onClick={()=>{submitCurrentBet("red");}}>Red</Button>
-            <Button variant="text" className="greenBet" onClick={()=>{submitCurrentBet("green");}}>Green</Button>
-            <Button variant="text" className="blackBet" onClick={()=>{submitCurrentBet("black");}}>Black</Button>
+            <Button variant="text" className="redBet" disabled={rouletteTimer===0 ? true : false} onClick={()=>{submitCurrentBet("red");}}>Red</Button>
+            <Button variant="text" className="greenBet" disabled={rouletteTimer===0 ? true : false} onClick={()=>{submitCurrentBet("green");}}>Green</Button>
+            <Button variant="text" className="blackBet" disabled={rouletteTimer===0 ? true : false} onClick={()=>{submitCurrentBet("black");}}>Black</Button>
             </div>
             <div className="betInfo">
             <div className="redOverall">
-            <span><PersonIcon/> 0 </span> 
-            <span><LocalAtmIcon/> 0 </span>
+            <span><PersonIcon/>
+            {betCount ? betCount.red : 0}  
+            </span> 
+            <span><LocalAtmIcon/> {betOverallAmount ? betOverallAmount.red : 0} </span>
              </div>
             <div className="greenOverall">
-            <span><PersonIcon/> 0 </span>
-            <span><LocalAtmIcon/> 0 </span>
+            <span><PersonIcon/> {betCount ? betCount.green : 0} </span>
+            <span><LocalAtmIcon/> {betOverallAmount ? betOverallAmount.green : 0} </span>
             </div>
             <div className="blackOverall">
-            <span><PersonIcon/> 0 </span>
-            <span><LocalAtmIcon/> 0 </span>
+            <span><PersonIcon/> {betCount ? betCount.black : 0} </span>
+            <span><LocalAtmIcon/> {betOverallAmount ? betOverallAmount.black : 0} </span>
             </div>
             </div>
            <div className="lastBets">
            <div className="red">
             <div className="highestRed">
-            highest red
+            Highest reds
             </div>
             <div className="smallerReds">
             {
@@ -194,7 +213,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
            </div>
            <div className="green">
             <div className="highestGreen">
-            highest green
+            Highest greens
             </div>
             <div className="smallerGreens">
             {
@@ -207,7 +226,7 @@ function Roulette({user,socket,sessionID,rouletteTimer,rouletteBets,currentWin})
            </div>
            <div className="black">
             <div className="highestBlack">
-            highest black
+            Highest blacks
             </div>
             <div className="smallerBlacks">
             {
