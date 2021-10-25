@@ -5,7 +5,7 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import axios from "axios";
-
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import Roulette from './Roulette';
 
 function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpened,socket,rouletteTimer,rouletteBets,setRouletteBets,currentWin}) {
@@ -71,21 +71,38 @@ export default Navigation;
  * REWARDS SCREEN WITH CUSTOM ELEMENTS
  */
 function RewardsScreen({handleClose,openBool}){
+
+    const kickUser=()=>{
+        console.log('kick');
+    }
+
     return(
         <Dialog onClose={handleClose} open={openBool} className="rewardScreen"
         >
-        <DialogTitle className="rewardTitle">Withdraw rewards</DialogTitle>
+        <DialogTitle className="rewardTitle">Rewards Shop</DialogTitle>
         <DialogContent className="rewardMenu">
-        <RewardsTile/>
+
+        <RewardsTile name="Kick" desc="Kicks user from server" price={30000} callback={()=>{console.log("kick")}}/>
+        <RewardsTile name="Ban" desc="Bans user from server" price={30000} callback={()=>{console.log("kick")}}/>
+        <RewardsTile name="ShadowBan" desc="Removes user's ability to interact with server for a moment" price={30000} callback={kickUser}/>
+        <RewardsTile name="UAV" desc="Bot scans voice chats if people are exposed,displays them on radar and targets them in red,picks 60% of targets to attack" price={30000} callback={()=>{console.log('uav')}}/> 
+        <RewardsTile name="Precision Airstrike" desc="Bot scans voicechats and attacks with 3 man precision " price={30000} callback={()=>{console.log('uav')}}/>
+
+
+
         </DialogContent>
         </Dialog>
     )
 }
 //TODO : CREATE LIKE PRODUCT TILE THAT SHOWS COST,SOME IMAGE OF REWARD AND DESCRIPTION WHAT IT DOES
-function RewardsTile(){
+function RewardsTile({name,desc,price,callback}){
     return (
-        <div className='rewardEl'>
-        <Button color="secondary" variant="contained" className="loginBtn">Kick</Button>
+        <div className="rewardEl">
+        <span className="name">{name ? name : null}</span>
+        <span className="description">{desc ? desc : "No description"}</span>
+        <span className="pricing"><LocalAtmIcon/>{price ? price : 777}</span>
+        <Button color="secondary" variant="contained" className="loginBtn rwdBtn" onClick={()=>{callback();
+        }}>Redeem</Button>
         </div>
     )
 }

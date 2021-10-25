@@ -52,15 +52,51 @@
 .MuiPaper-rounded {
   border-radius: 0px !important;
 }
+
 .rewardTitle{
   background-color: $bg_content;
   color:white;
+  display:flex;
+  justify-content: center;
+  font-weight: bold;
 }
 .rewardMenu{
   background-color: $bg_content;
   color:white;
   display:flex;
   flex-wrap: wrap;
+}
+
+.rewardEl{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: $bg_content2;
+  border-radius: 5px;
+  width: 170px;
+  margin:10px;
+  .rwdBtn{
+    margin:5px;
+  }
+  .description{
+    height: 90px;
+    padding:5px;
+    overflow-y:scroll; //TODO: customize scrollbar
+  }
+  .name{
+    display:flex;
+    justify-content: center;
+    padding:5px;
+    font-size: large;
+    font-weight: bold;
+  }
+  .pricing{
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    color:gold;
+    padding:5px;
+  }
 }
 .loginDialog {
   background-color: $bg_content2;
@@ -188,4 +224,8 @@
     
   height: 100%;
   }
+}
+
+.MuiDialog-paperWidthSm{
+  max-width:1000px !important; //overrides default 600px width so i can display more elements in shop
 }
