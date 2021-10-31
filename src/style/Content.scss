@@ -65,6 +65,20 @@
   color:white;
   display:flex;
   flex-wrap: wrap;
+  .targets{
+    display:flex;
+    flex-direction: column;
+    .discord_users{
+      display:flex;
+      flex-wrap: wrap;
+    }
+    .text{
+      a{color:$pinkred;margin-left:5px;text-decoration: none;font-weight: bold;font-size: larger;}
+    }
+  }
+  .rewards{
+    display:flex;
+  }
 }
 
 .rewardEl{
