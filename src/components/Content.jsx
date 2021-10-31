@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import "../style/Content.scss";
 import {Button,Dialog,DialogTitle,DialogContent,TextField,Avatar} from "@material-ui/core";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
@@ -50,7 +50,7 @@ function Navigation({sessionID,setSessionID,user,setUser,setLoginOpened,loginOpe
        
         <div className="content2">
         <LoginDialog handleClose={closeLoginDialog} openBool={loginOpened} setSessionID={setSessionID} setLoginOpened={setLoginOpened} setUser={setUser}/>
-        <RewardsScreen handleClose={closeRewardScreen} openBool={rewardsOpen}/>
+        <RewardsScreen handleClose={closeRewardScreen} openBool={rewardsOpen} user={user}/>
         <div className="second_navigation">
         
         {sessionID ? <span className="exitIcon"><ExitToAppIcon onClick={()=>{logoutUser();}}/></span> : null}
@@ -70,31 +70,51 @@ export default Navigation;
 /**
  * REWARDS SCREEN WITH CUSTOM ELEMENTS
  */
-function RewardsScreen({handleClose,openBool}){
-
-    const kickUser=()=>{
-        console.log('kick');
+function RewardsScreen({handleClose,openBool,user}){
+    const [discordUsers,setDiscordUsers]=useState([]);
+    const [selectIndex,setSelectIndex]=useState(0);
+    const fetchDiscordUsers=()=>{
+        //fetches array from 
+        axios.get("http://localhost:3333/users").then(data=>{setDiscordUsers(data.data)});
     }
-
+    const kickUser=()=>{
+        axios.post("http://localhost:3333/kick",{userName:user.name,target:discordUsers[selectIndex],rewardName:"Kick",rewardCost:30000,timestamp:Date.now()});
+    }
+    useEffect(()=>{if(openBool)fetchDiscordUsers();},[openBool]);
     return(
         <Dialog onClose={handleClose} open={openBool} className="rewardScreen"
         >
         <DialogTitle className="rewardTitle">Rewards Shop</DialogTitle>
         <DialogContent className="rewardMenu">
+      
+        <div className="targets">
+        <span className='text'>
+        Choose target to apply effect onto from 
+        <a href="https://discord.gg/7ucFa2zcAX" target="_blank" rel="noreferrer">Discord</a>.<br/>
+        </span>
+        <div className="discord_users">
+        {
+        discordUsers.map((member,i)=>{
+        return <Avatar key={member.userId} src={member.displayAvatarURL} style={{border: selectIndex===i ? `2px solid red` : null,cursor:"pointer"}} 
+        onClick={()=>{setSelectIndex(i)}}/>
+        })
+        }
+        </div></div>
 
-        <RewardsTile name="Kick" desc="Kicks user from server" price={30000} callback={()=>{console.log("kick")}}/>
+        <div className="rewards">
+        <RewardsTile name="Kick" desc="Kicks user from server" price={30000} callback={()=>{kickUser();}}/>
         <RewardsTile name="Ban" desc="Bans user from server" price={30000} callback={()=>{console.log("kick")}}/>
         <RewardsTile name="ShadowBan" desc="Removes user's ability to interact with server for a moment" price={30000} callback={kickUser}/>
         <RewardsTile name="UAV" desc="Bot scans voice chats if people are exposed,displays them on radar and targets them in red,picks 60% of targets to attack" price={30000} callback={()=>{console.log('uav')}}/> 
         <RewardsTile name="Precision Airstrike" desc="Bot scans voicechats and attacks with 3 man precision " price={30000} callback={()=>{console.log('uav')}}/>
-
+        </div>
 
 
         </DialogContent>
         </Dialog>
     )
 }
-//TODO : CREATE LIKE PRODUCT TILE THAT SHOWS COST,SOME IMAGE OF REWARD AND DESCRIPTION WHAT IT DOES
+
 function RewardsTile({name,desc,price,callback}){
     return (
         <div className="rewardEl">
