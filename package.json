@@ -12,6 +12,7 @@
     "bcrypt": "^5.0.1",
     "connect-mongodb-session": "^3.1.0",
     "cors": "^2.8.5",
+    "discord.js": "^13.3.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "mongoose": "^6.0.4",
@@ -27,7 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server-dev": "nodemon ./src/server/index.js"
+    "server-dev": "nodemon ./src/server/index.js",
+    "discord-bot": "nodemon ./src/server/bot/rewardbot.js"
   },
   "eslintConfig": {
     "extends": [
