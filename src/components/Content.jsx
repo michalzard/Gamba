@@ -77,8 +77,8 @@ function RewardsScreen({handleClose,openBool,user}){
         //fetches array from 
         axios.get("http://localhost:3333/users").then(data=>{setDiscordUsers(data.data)});
     }
-    const kickUser=()=>{
-        axios.post("http://localhost:3333/kick",{userName:user.name,target:discordUsers[selectIndex],rewardName:"Kick",rewardCost:30000,timestamp:Date.now()});
+    const redeemReward=(rName)=>{
+        axios.post("http://localhost:3333/reward",{userName:user.name,target:discordUsers[selectIndex],rewardName:rName ? rName : null,rewardCost:30000,timestamp:Date.now()});
     }
     useEffect(()=>{if(openBool)fetchDiscordUsers();},[openBool]);
     return(
@@ -102,11 +102,12 @@ function RewardsScreen({handleClose,openBool,user}){
         </div></div>
 
         <div className="rewards">
-        <RewardsTile name="Kick" desc="Kicks user from server" price={30000} callback={()=>{kickUser();}}/>
-        <RewardsTile name="Ban" desc="Bans user from server" price={30000} callback={()=>{console.log("kick")}}/>
-        <RewardsTile name="ShadowBan" desc="Removes user's ability to interact with server for a moment" price={30000} callback={kickUser}/>
-        <RewardsTile name="UAV" desc="Bot scans voice chats if people are exposed,displays them on radar and targets them in red,picks 60% of targets to attack" price={30000} callback={()=>{console.log('uav')}}/> 
-        <RewardsTile name="Precision Airstrike" desc="Bot scans voicechats and attacks with 3 man precision " price={30000} callback={()=>{console.log('uav')}}/>
+        <RewardsTile name="Kick" desc="Kicks user from server" price={30000} callback={()=>{redeemReward("Kick");}}/>
+        <RewardsTile name="Ban" desc="Bans user from server" price={30000} callback={()=>{redeemReward("Ban")}}/>
+        <RewardsTile name="UAV" desc="Bot scans voice chats if people are exposed,displays them on radar and targets them in red,
+        picks 60% of targets to attack" price={30000} callback={()=>{redeemReward("Uav")}}/> 
+        <RewardsTile name="Precision Airstrike" desc="Bot scans voicechats and attacks with 3 man precision "
+         price={30000} callback={()=>{console.log('airstrike')}}/>
         </div>
 
 
