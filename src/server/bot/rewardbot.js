@@ -99,6 +99,10 @@ async function RemoveUser(username,reason,type){
     }catch(err){console.log(err.message);}
 }
 
+
+/**
+ *  UAV FUNCTIONS
+ */
 async function generateAndSendUAVMap(channelID){
     const canvas=Canvas.createCanvas(1000,1000);
     const ctx=canvas.getContext('2d');
@@ -144,4 +148,36 @@ function drawText(ctx,x,y,text){
     ctx.fillText(text,x,y);
     ctx.restore();
 
+}
+
+/**
+ * Precision Airstrike Functions
+ */
+
+async function targetRandomUsers(){
+    try{
+    const guilds=client.guilds.cache.map((guild)=>guild);
+    const users=[...(await guilds[0].members.fetch()).values()]
+    .filter(user=>user.displayName!==client.user.username);
+    const rnd=Math.floor(Math.random()*users.length);
+    const targettedUsers=[];
+    targettedUsers.push(users[rnd]);
+    const existingRole=guilds[0].roles.cache.find(role=>role.name==="Target");
+    if(!existingRole){
+    guilds[0].roles.create({
+        name:"Target",
+        color:"RED",
+        reason:"Precision strike targetting",
+    });
+    }else{
+          
+    for(let i=0;i<targettedUsers.length;i++){
+        const members=targettedUsers[i];
+        members.roles.add(existingRole);
+    } 
+    }
+
+    }catch(err){
+        console.log(err.message);
+    }
 }
