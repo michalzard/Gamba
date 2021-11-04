@@ -297,7 +297,8 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
     .red {
       flex: 1;
       margin: 10px;
-
+      background-color: $bg_content2;
+      border-radius: 6px;
       .highestRed {
         @include highestBet($pinkred);
       }
@@ -309,14 +310,16 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
         color: $pinkred;
         font-size: small;
         overflow-y: scroll;
-        max-height: 250px;
+        max-height: 230px;
+
       }
     }
 
     .green {
       flex: 1;
       margin: 10px;
-
+      background-color: $bg_content2;
+      border-radius: 6px;
       .highestGreen {
         @include highestBet(greenyellow);
       }
@@ -328,14 +331,15 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
         color: greenyellow;
         font-size: small;
         overflow-y: scroll;
-        max-height: 250px;
+        max-height: 230px;
       }
     }
 
     .black {
       flex: 1;
       margin: 10px;
-
+      background-color: $bg_content2;
+      border-radius: 6px;
       .highestBlack {
         @include highestBet(gray);
 
@@ -349,9 +353,32 @@ TODO : ATTACH PIP TO TOP OF ROULETTE TO SHOWCASE WHICH COLOR IS WINNING ONE
       color: gray;
       font-size: small;
       overflow-y: scroll;
-      max-height: 250px;
+      max-height: 230px;
 
     }
   }
 
+}
+
+// GLOBALLY CHANGES SCROLLBAR
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $second_nav; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $pinkred; 
 }
