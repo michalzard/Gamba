@@ -18,14 +18,19 @@ function Chat({user,setLoginOpened,socket,messages,setMessages}) {
         setMessages((prev)=>[...prev,data]);
         textBox.value='';    
         }
-
+        const lastChatMsg=setTimeout(()=>{scrollToBottom('Messages');clearInterval(lastChatMsg);},120); 
+        
         }
     }
+    const scrollToBottom=(id)=>{
+        const div=document.getElementById(id);
+        div.scrollTop=div.scrollHeight-div.clientHeight;
+     }
 
     return (
         <div className="Chat">
         <div className="Info"><h4>Info about some shit</h4></div>
-        <div className="Messages">
+        <div className="Messages" id="Messages">
         {socket ? socket.disconnected ? 
         <div className="chatDisconnected"><BlockIcon/><span>Chat disconnected</span></div> : null
         : null}
@@ -40,8 +45,8 @@ function Chat({user,setLoginOpened,socket,messages,setMessages}) {
         {
             user ? 
             <>
-            <textarea type="text" className="InputArea" placeholder={`Chat as ${user.name }`}/> 
-            <div className="send"><SendIcon onClick={()=>{sendMessageToChat()}} className="chatSend"></SendIcon></div>
+            <textarea type="text" className="InputArea" onKeyPress={(e)=>{if(e.key==="Enter"){e.preventDefault();sendMessageToChat();}}} placeholder={`Chat as ${user.name }`}/> 
+            <div className="send"><SendIcon onClick={()=>{sendMessageToChat();}} className="chatSend"></SendIcon></div>
             </> 
             : 
             <span className="notLoggedInput">Please<span onClick={()=>{setLoginOpened(true)}} className="loginLink">log in</span> to chat</span> 
